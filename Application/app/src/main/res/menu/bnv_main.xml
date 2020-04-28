@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="홈"
+            app:itemIconTint="@drawable/item_color"
+            app:itemTextColor="@drawable/item_color"/>
+    <item
+            android:id="@+id/chat"
+            android:icon="@drawable/chat_icon"
+            android:title="채팅"
+            app:itemIconTint="@drawable/item_color"
+            app:itemTextColor="@drawable/item_color"
+            />
+
+    <item
+            android:id="@+id/cafeteria"
+            android:icon="@drawable/restaurent_icon"
+            android:title="맛집"
+            app:itemIconTint="@drawable/item_color"
+            app:itemTextColor="@drawable/item_color"
+            />
+    <item
+            android:id="@+id/option"
+            android:icon="@drawable/option_icon"
+            app:itemIconTint="@drawable/item_color"
+            app:itemTextColor="@drawable/item_color"
+            android:title="옵션" />
+</menu>

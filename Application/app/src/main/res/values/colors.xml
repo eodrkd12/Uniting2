@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00BFFF</color>
+    <color name="colorPrimaryDark">#00000000</color>
+    <color name="radio_click">#87CEEB</color>
+    <color name="colorAccent">#00BFFF</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorLime">#00FF00</color>
+    <color name="colorSkyBlue">#87CEEB</color>
+    <color name="colorDeepSkyblue">#00BFFF</color>
+</resources>

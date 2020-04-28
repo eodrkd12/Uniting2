@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">Uniting</string>
+    <string name="hint_search"> 검색</string>
+    <string name="hint_roomname"> 오픈채팅 이름</string>
+    <string name="hint_roommax"> 오픈채팅 인원</string>
+
+
+</resources>

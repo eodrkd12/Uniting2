@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@drawable/color_view_dating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal">
+
+    <TextView
+            android:id="@+id/text_personalitytitle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="성격을 2가지 이상 선택해주세요."
+            android:textColor="#000000"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/rv_personality"
+            app:layout_constraintStart_toStartOf="@+id/rv_personality"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_personality"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_personalitytitle" />
+
+    <TextView
+            android:id="@+id/text_personalitypass"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="건너뛰기"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_personality" />
+
+    <TextView
+            android:id="@+id/text_personalitysave"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="저장하기"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_personality"
+            app:layout_constraintVertical_bias="0.0" />
+
+    <View
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:background="#d7d7d7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_personalitysave"
+            app:layout_constraintStart_toStartOf="@+id/text_personalitypass" />
+
+    <View
+            android:id="@+id/view2"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="50dp"
+            android:background="#d7d7d7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_personalitysave"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="@+id/text_personalitypass" />
+
+    <View
+            android:id="@+id/view3"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="100dp"
+            android:background="#d7d7d7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_personalitysave"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="@+id/text_personalitypass" />
+
+    <View
+            android:id="@+id/view4"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="150dp"
+            android:background="#d7d7d7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_personalitysave"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="@+id/text_personalitypass" />
+
+    <View
+            android:id="@+id/view9"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="200dp"
+            android:background="#d7d7d7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_personalitysave"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="@+id/text_personalitypass" />
+
+    <View
+            android:id="@+id/view"
+            android:background="#d7d7d7"
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+            android:id="@+id/view5"
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="200dp"
+            android:background="#d7d7d7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+            android:id="@+id/view8"
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="250dp"
+            android:background="#d7d7d7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+            android:id="@+id/view6"
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="150dp"
+            android:background="#d7d7d7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+            android:id="@+id/view7"
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="100dp"
+            android:background="#d7d7d7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

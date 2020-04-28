@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "348791094939",
+    "firebase_url": "https://realtimechatting-70acf.firebaseio.com",
+    "project_id": "realtimechatting-70acf",
+    "storage_bucket": "realtimechatting-70acf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348791094939:android:864c364889beddda8d903e",
+        "android_client_info": {
+          "package_name": "com.example.commit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348791094939-ubrdvcje6cteff5ddq2hofo0hl57p54d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXRfB4PVTlSvPDI6yiYPbeRypfV0L4fDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348791094939-ubrdvcje6cteff5ddq2hofo0hl57p54d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
