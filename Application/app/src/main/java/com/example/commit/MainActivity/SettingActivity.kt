@@ -1,14 +1,23 @@
 package com.example.commit.MainActivity
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Base64
 
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import com.example.commit.IntroActivity.LoginActivity
 import com.example.commit.R
 import com.example.commit.Class.UserInfo
@@ -19,11 +28,55 @@ import java.util.*
 
 class SettingActivity : AppCompatActivity() {
 
+    var dialog:Dialog? = null
+    var dialogView: View? = null
+    var dialogEditChange: EditText? = null
+    var dialogBtnCheck: Button? = null
+    var dialogTextCheck: TextView? = null
+    var dialogBtnConfirm: Button? = null
+    var dialogBtnCancel: Button? = null
+    var nicknameTemp: String = ""
+    var nicknameCheck: Int = 0
+
+    fun nicknameCheck() {
+        VolleyService.nicknameCheckReq(dialogEditChange!!.text.toString(), this, {success->
+            if(success==0)
+            {
+                dialogTextCheck!!.setText("중복된 닉네임입니다.")
+                dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
+            }
+            else if(success==1)
+            {
+                VolleyService.checkTmpNickname(dialogEditChange!!.text.toString(), this, {success->
+                    if(success==0)
+                    {
+                        dialogTextCheck!!.setText("중복된 닉네임입니다.")
+                        dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
+                    }
+                    else if(success==1)
+                    {
+                        dialogTextCheck!!.setText("사용가능한 닉네임입니다.")
+                        dialogTextCheck!!.setTextColor(Color.parseColor("#008000"))
+                        VolleyService.insertTmpNickname(dialogEditChange!!.text.toString(), this, {success->})
+                        nicknameTemp = dialogEditChange!!.text.toString()
+                        nicknameCheck = 1
+                    }
+                })
+            }
+        })
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var intent=intent
 
         var tag=intent.getStringExtra("tag")
+
+        dialog = Dialog(this)
+
+
+
 
         when(tag){
             "프로필 보기" ->{
@@ -60,6 +113,81 @@ class SettingActivity : AppCompatActivity() {
 
                     img_profile.setImageBitmap(image)
                 })
+
+                text_changenickname.setOnClickListener {
+                    dialogView = layoutInflater.inflate(R.layout.dialog_changenickname, null)
+                    dialogEditChange = dialogView!!.findViewById<EditText>(R.id.edit_change)
+                    dialogBtnCheck = dialogView!!.findViewById<Button>(R.id.btn_changecheck)
+                    dialogTextCheck = dialogView!!.findViewById<TextView>(R.id.text_changecheck)
+                    dialogBtnConfirm = dialogView!!.findViewById<Button>(R.id.btn_changeconfirm)
+                    dialogBtnCancel = dialogView!!.findViewById<Button>(R.id.btn_changecancel)
+
+                    dialogBtnCheck!!.setOnClickListener {
+                        if(dialogEditChange!!.text.toString().length < 3)
+                        {
+                            dialogTextCheck!!.text = "닉네임은 3자리 이상이어야 합니다."
+                        }
+                        else
+                        {
+                            if(nicknameTemp != dialogEditChange!!.text.toString())
+                            {
+                                VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+                                nicknameCheck()
+                            }
+                            else if(nicknameTemp == dialogEditChange!!.text.toString())
+                            {
+                                dialogTextCheck!!.setText("사용가능한 닉네임입니다.")
+                                dialogTextCheck!!.setTextColor(Color.parseColor("#008000"))
+                                nicknameCheck = 1
+                            }
+                        }
+                    }
+
+                    dialogBtnConfirm!!.setOnClickListener{
+                        if(nicknameCheck == 1)
+                        {
+                            VolleyService.insertNickname(UserInfo.ID, nicknameTemp, this, {success->})
+                            VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+                            Toast.makeText(this, "닉네임 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                            dialog!!.dismiss()
+                        }
+                        else
+                        {
+                            Toast.makeText(this, "닉네임을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    dialogBtnCancel!!.setOnClickListener {
+                        if(nicknameTemp != "")
+                        {
+                            VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+                        }
+                        dialog!!.dismiss()
+                    }
+
+                    dialogEditChange!!.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(p0: Editable?) {
+
+                        }
+
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                            dialogTextCheck!!.text = ""
+                            nicknameCheck = 0
+                        }
+                    })
+
+                    dialog!!.setContentView(dialogView)
+                    dialog!!.show()
+                }
+
+
+
+
+
+
             }
             "알림 설정"->{
                 setContentView(R.layout.activity_alam_setting)
