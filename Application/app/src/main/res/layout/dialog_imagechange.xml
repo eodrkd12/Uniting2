@@ -24,18 +24,33 @@
             android:paddingBottom="20dp">
 
         <Button
-                android:id="@+id/btn_changeimage"
+                android:id="@+id/btn_changeimage_from_phone"
                 android:layout_width="309dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
                 android:background="#00000000"
                 android:gravity="center"
-                android:text="앨범에서 사진/동영상 선택"
+                android:text="앨범에서 사진 선택"
                 android:textColor="#000000"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+                android:id="@+id/btn_changeimage_from_cam"
+                android:layout_width="309dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="프로필 사진 촬영"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.444"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_changeimage_from_phone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- Notice -->
 
