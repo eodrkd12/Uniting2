@@ -76,6 +76,7 @@ class OpenChatListActivity : AppCompatActivity() {
                     var universityName = json.getString("univ_name")
                     var curNum = json.getInt("cur_num")
                     var introduce = json.getString("introduce")
+                    var chatAgree=json.getString("chat_agree")
 
                     chatRoomAdapter.addItem(
                         roomId,
@@ -85,7 +86,8 @@ class OpenChatListActivity : AppCompatActivity() {
                         limitNum,
                         universityName,
                         curNum,
-                        introduce
+                        introduce,
+                        chatAgree
                     )
                 }
                 chatRoomAdapter.notifyDataSetChanged()
@@ -121,6 +123,7 @@ class OpenChatListActivity : AppCompatActivity() {
                                             var universityName = json.getString("univ_name")
                                             var curNum = json.getInt("cur_num")
                                             var introduce = json.getString("introduce")
+                                            var chatAgree=json.getString("chat_agree")
                                             chatRoomAdapter.addItem(
                                                 roomId,
                                                 category,
@@ -129,7 +132,8 @@ class OpenChatListActivity : AppCompatActivity() {
                                                 limitNum,
                                                 universityName,
                                                 curNum,
-                                                introduce
+                                                introduce,
+                                                chatAgree
                                             )
                                         }
                                     }
@@ -160,6 +164,7 @@ class OpenChatListActivity : AppCompatActivity() {
                     var universityName = json.getString("univ_name")
                     var curNum = json.getInt("cur_num")
                     var introduce = json.getString("introduce")
+                    var chatAgree=json.getString("chat_agree")
 
                    var item:ChatRoomListItem = ChatRoomListItem()
                     item.roomId=roomId
@@ -170,6 +175,7 @@ class OpenChatListActivity : AppCompatActivity() {
                     item.universityName=universityName
                     item.curNum=curNum
                     item.introduce=introduce
+                    item.chatAgree=chatAgree
 
                    openchatList.add(item)
 
@@ -211,7 +217,7 @@ class OpenChatListActivity : AppCompatActivity() {
                             item.universityName = openchatList.get(i).universityName
                             item.curNum = openchatList.get(i).curNum
                             item.introduce = openchatList.get(i).introduce
-
+                            item.chatAgree=openchatList.get(i).chatAgree
                             openchatFilter.add(item)
 
 
@@ -223,6 +229,7 @@ class OpenChatListActivity : AppCompatActivity() {
                             var universityName = item.universityName
                             var curNum = item.curNum
                             var introduce = item.introduce
+                            var chatAgree=item.chatAgree
 
 
                             chatRoomAdapter.addItem(
@@ -233,7 +240,8 @@ class OpenChatListActivity : AppCompatActivity() {
                                 limitNum!!,
                                 universityName.toString(),
                                 curNum!!,
-                                introduce.toString()
+                                introduce.toString(),
+                                chatAgree.toString()
                             )
 
                             chatRoomAdapter.notifyDataSetChanged()
@@ -248,6 +256,7 @@ class OpenChatListActivity : AppCompatActivity() {
                             item.universityName = openchatList.get(i).universityName
                             item.curNum = openchatList.get(i).curNum
                             item.introduce = openchatList.get(i).introduce
+                            item.chatAgree=openchatList.get(i).chatAgree
 
                             var roomId = openchatList.get(i).roomId
                             var cateName = openchatList.get(i).cateName
@@ -257,6 +266,7 @@ class OpenChatListActivity : AppCompatActivity() {
                             var universityName = openchatList.get(i).universityName
                             var curNum = openchatList.get(i).curNum
                             var introduce = openchatList.get(i).introduce
+                            var chatAgree=openchatList.get(i).chatAgree
 
 
                             chatRoomAdapter.addItem(
@@ -267,7 +277,8 @@ class OpenChatListActivity : AppCompatActivity() {
                                 limitNum!!,
                                 universityName.toString(),
                                 curNum!!,
-                                introduce.toString()
+                                introduce.toString(),
+                                chatAgree.toString()
                             )
 
                             chatRoomAdapter.notifyDataSetChanged()

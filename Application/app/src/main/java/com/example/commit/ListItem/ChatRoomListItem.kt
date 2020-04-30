@@ -9,4 +9,5 @@ class ChatRoomListItem {
     var universityName:String?=null
     var curNum:Int?=null
     var introduce:String?=null
+    var chatAgree:String?=null
 }
