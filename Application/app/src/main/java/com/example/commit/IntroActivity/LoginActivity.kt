@@ -128,7 +128,7 @@ class LoginActivity : AppCompatActivity() {
                             .putString("DEPT",UserInfo.DEPT)
                             .putString("HOBBY",UserInfo.HOBBY)
                             .putString("PERSONALITY",UserInfo.PERSONALITY)
-                            .putString("ING",UserInfo.IMG)
+                            .putString("IMG",UserInfo.IMG)
                             .putString("FCM_TOKEN",UserInfo.FCM_TOKEN)
                             /*.putString("GOOGLE_ID_TOKEN",UserInfo.GOOGLE_ID_TOKEN)
                             .putString("GOOGLE_ACCOUNT",UserInfo.GOOGLE_ACCOUNT)*/

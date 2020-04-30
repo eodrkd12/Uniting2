@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="#eeeeee"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+    <!-- 타이틀바 -->
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <!-- //end 타이틀바 -->
+
+    <!-- Notice -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="40dp"
+            android:paddingBottom="20dp">
+
+        <Button
+                android:id="@+id/btn_changeimage_from_phone"
+                android:layout_width="309dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="앨범에서 사진 선택"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+                android:id="@+id/btn_changeimage_from_cam"
+                android:layout_width="309dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="프로필 사진 촬영"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.444"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_changeimage_from_phone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Notice -->
+
+    <View
+            android:background="#66bdbdbd"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+    <!-- 닫기 버튼 -->
+    <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <View
+                android:id="@+id/view10"
+                android:background="#66bdbdbd"
+                android:layout_width="1dp"
+                android:layout_height="53dp" />
+
+        <Button
+                android:id="@+id/btn_imagechangecancel"
+                android:layout_width="wrap_content"
+                android:layout_height="53dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:text="취소" />
+
+    </LinearLayout>
+    <!--// 닫기 버튼 -->
+</LinearLayout>
