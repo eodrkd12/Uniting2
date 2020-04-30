@@ -44,11 +44,9 @@ class OptionFragment():Fragment() {
 
         VolleyService.getJoinDating(UserInfo.NICKNAME,activity!!.applicationContext,{success ->
             if(success==null) {
-                Log.d("uniting","null")
                 switch.isChecked = false
             }
             else {
-                Log.d("uniting","not null")
                 switch.isChecked = true
             }
 
