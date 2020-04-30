@@ -126,10 +126,15 @@ class SettingActivity : AppCompatActivity() {
                         if(dialogEditChange!!.text.toString().length < 3)
                         {
                             dialogTextCheck!!.text = "닉네임은 3자리 이상이어야 합니다."
+                            dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
                         }
                         else
                         {
-                            if(nicknameTemp != dialogEditChange!!.text.toString())
+                            if(nicknameTemp == "")
+                            {
+                                nicknameCheck()
+                            }
+                            else if(nicknameTemp != dialogEditChange!!.text.toString())
                             {
                                 VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
                                 nicknameCheck()
@@ -149,11 +154,14 @@ class SettingActivity : AppCompatActivity() {
                             VolleyService.insertNickname(UserInfo.ID, nicknameTemp, this, {success->})
                             VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
                             Toast.makeText(this, "닉네임 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                            nicknameCheck = 0
+                            nicknameTemp = ""
                             dialog!!.dismiss()
                         }
                         else
                         {
-                            Toast.makeText(this, "닉네임을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                            dialogTextCheck!!.text = "닉네임을 확인해주세요."
+                            dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
                         }
                     }
 
@@ -162,6 +170,8 @@ class SettingActivity : AppCompatActivity() {
                         {
                             VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
                         }
+                        nicknameCheck = 0
+                        nicknameTemp = ""
                         dialog!!.dismiss()
                     }
 
