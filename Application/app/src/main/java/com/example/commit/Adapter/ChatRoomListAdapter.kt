@@ -88,6 +88,8 @@ class ChatRoomListAdapter(val context: Context) :
                                             intent.putExtra("room_id", item.roomId)
                                             intent.putExtra("category", item.cateName)
                                             intent.putExtra("title", item.roomTitle)
+                                            intent.putExtra("chat_agree",item.chatAgree)
+                                            intent.putExtra("maker",item.maker)
                                             startActivity(context, intent, null)
                                         }
                                     })
@@ -114,7 +116,8 @@ class ChatRoomListAdapter(val context: Context) :
         limitNum: Int,
         universityName: String,
         curNum: Int,
-        introduce: String
+        introduce: String,
+        chatAgree: String
     ) {
         val item = ChatRoomListItem()
 
@@ -126,6 +129,7 @@ class ChatRoomListAdapter(val context: Context) :
         item.universityName = universityName
         item.curNum = curNum
         item.introduce = introduce
+        item.chatAgree=chatAgree
 
         chatRoomList.add(item)
     }

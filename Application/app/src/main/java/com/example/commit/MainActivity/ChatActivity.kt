@@ -53,6 +53,12 @@ class ChatActivity : AppCompatActivity() {
         chatAgree=intent.getStringExtra("chat_agree")
         maker=intent.getStringExtra("maker")
 
+        Log.d("uniting",chatAgree)
+
+        toolbar.title = title
+
+        list_chat.adapter = chatAdapter
+
         btn_agree.setOnClickListener {
             VolleyService.chatAgreeReq(roomId,this,{success ->
                 VolleyService.sendFCMReq(roomId!!,"요청 수락","${UserInfo.NICKNAME}님이 대화 요청을 수락하였습니다",this)
@@ -64,11 +70,16 @@ class ChatActivity : AppCompatActivity() {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(roomId!!)
             })
         }
+        edit_chat.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus==true){
+
+            }
+        }
 
         if(chatAgree=="true"){
             edit_chat.isEnabled=true
-            layout_agree.visibility== View.GONE
-            text_waiting.visibility==View.GONE
+            layout_agree.visibility= View.GONE
+            text_waiting.visibility=View.GONE
             //FCM 주제구독
             FirebaseMessaging.getInstance().subscribeToTopic(roomId!!)
                 .addOnCompleteListener {
@@ -77,9 +88,7 @@ class ChatActivity : AppCompatActivity() {
                     Log.d("uniting", "ChatActivity.msg : ${UserInfo.NICKNAME} ${msg}")
                 }
 
-            toolbar.title = title
 
-            list_chat.adapter = chatAdapter
 
             VolleyService.getJoinTimeReq(roomId!!, UserInfo.NICKNAME, this, { success ->
                 val ref = FirebaseDatabase.getInstance().reference.child("chat").child(roomId!!)
@@ -268,4 +277,5 @@ class ChatActivity : AppCompatActivity() {
         */
         return true
     }
+
 }

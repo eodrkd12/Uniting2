@@ -158,6 +158,13 @@ class SettingActivity : AppCompatActivity() {
                         {
                             VolleyService.insertNickname(UserInfo.ID, nicknameTemp, this, {success->})
                             VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+
+                            var pref=this.getSharedPreferences("UserInfo",Context.MODE_PRIVATE)
+                            var editor=pref.edit()
+                            editor.remove("NICKNAME").commit()
+                            editor.putString("NICKNAME",nicknameTemp).apply()
+                            UserInfo.NICKNAME=nicknameTemp
+
                             Toast.makeText(this, "닉네임 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show()
                             dialog!!.dismiss()
                         }
