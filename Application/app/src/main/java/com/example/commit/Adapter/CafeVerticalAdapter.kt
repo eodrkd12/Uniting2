@@ -84,7 +84,7 @@ class CafeVerticalAdapter(activity: Activity ,val cafetype: ArrayList<Type>) : R
                         val homefeed = gson.fromJson(body, Homefeed::class.java)
 
                         holder.CafeHorizontalRV.setHasFixedSize(true)
-                        holder.CafeHorizontalRV.layoutManager = LinearLayoutManager(mactivity, LinearLayout.HORIZONTAL, false)
+                        holder.CafeHorizontalRV.layoutManager = LinearLayoutManager(mactivity, RecyclerView.HORIZONTAL, false)
                         holder.CafeHorizontalRV.adapter = CafeteriaAdapter(mactivity!!,  homefeed)
 
                     }
@@ -121,7 +121,7 @@ class CafeVerticalAdapter(activity: Activity ,val cafetype: ArrayList<Type>) : R
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val CafeHorizontalRV : RecyclerView = view.findViewById(R.id.CafeHorizontalRV)
         fun bindItems(data: Type) {
-            itemView.menutype.text = data.title
+            itemView.text_menutype.text = data.title
         }
     }
 }
