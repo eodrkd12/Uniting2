@@ -984,6 +984,21 @@ object VolleyService {
     }
 
     fun sendFCMReq(roomId: String, title: String, content: String, context: Context) {
+        /*var url="https://fcm.googleapis.com/fcm/send"
+
+        var json=JSONObject()
+        json.put("to","topics/${roomId}")
+        json.put("priority","high")
+
+        var notification=JSONObject()
+        notification.put("body",content)
+        notification.put("title",title)
+        json.put("notification",notification)
+
+        var data=JSONObject()
+        data.put("message",content)
+        data.put("title",title)
+        json.put("data",data)*/
         var url = "${ip}/join_room/fcm/send"
 
         var json = JSONObject()
@@ -1141,5 +1156,128 @@ object VolleyService {
         }
         Volley.newRequestQueue(context).add(request)
     }
+
+    fun insertId(id:String, universityName:String, departmentName: String, context:Context, success: (JSONObject?) -> Unit) {
+        var url = "${ip}/user/insert/id"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("univ_name", universityName)
+        jsonObject.put("dept_name", departmentName)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun deleteId(id:String, context:Context, success: (JSONObject?) -> Unit) {
+        var url = "${ip}/user/delete/id"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertNickname(id:String, nickname:String, context:Context, success: (JSONObject?) -> Unit) {
+        var url = "${ip}/user/insert/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun checkTmpNickname(nickname: String, context:Context, success: (Int?)->Unit) {
+        var url = "${ip}/user/check/tmp/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(0)
+            },
+            Response.ErrorListener {
+                success(1)
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertTmpNickname(nickname: String, context:Context, success: (JSONObject?)->Unit) {
+        var url = "${ip}/user/insert/tmp/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun deleteTmpNickname(nickname:String, context:Context, success:(JSONObject?)->Unit) {
+        var url = "${ip}/user/delete/tmp/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+
 }
 

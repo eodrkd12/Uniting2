@@ -29,6 +29,7 @@ import com.example.commit.Singleton.GoogleAuthService.getAccount
 import com.example.commit.Singleton.VolleyService
 import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.firebase.iid.FirebaseInstanceId
+import com.example.commit.R.layout.activity_login
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -43,11 +44,14 @@ class LoginActivity : AppCompatActivity() {
             var intent:Intent=Intent(this,AcFindActivity::class.java)
             startActivity(intent)
         }
+
+
         //인승추가(도움말 버튼 클릭 시, 엑티비티 변환)
         text_guide.setOnClickListener {
             var intent:Intent=Intent(this,OpenChatListActivity::class.java)
             startActivity(intent)
         }
+
 
         text_join.setOnClickListener {
             var intent:Intent=Intent(this,Signup1Activity::class.java)

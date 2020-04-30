@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.toolbox.Volley
 import com.example.commit.Adapter.PersonalityAdapter
 import com.example.commit.ListItem.Hobby
 import com.example.commit.ListItem.Personality
@@ -39,7 +40,12 @@ class Signup3Activity : AppCompatActivity() {
     var yearList = ArrayList<String>()
     var hobby: String = ""
     var personality: String = ""
+    var idTemp: String = ""
+    var nicknameTemp: String = ""
+    var univName: String = ""
+    var univDept: String = ""
 
+    //아이디 특수문자 입력방지 필터
     class IdFilter : InputFilter {
         override fun filter(source: CharSequence, start: Int, end: Int, dest: Spanned, dstart: Int, dend: Int) : CharSequence?{
             var ps : Pattern = Pattern.compile("^[a-zA-Z0-9]+$")
@@ -48,6 +54,36 @@ class Signup3Activity : AppCompatActivity() {
             }
             return null
         }
+    }
+
+    //사용자가 홈키 눌렀을때
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        if(idTemp != "") {
+            VolleyService.deleteId(idTemp, this@Signup3Activity, {success->
+            })
+        }
+        idTemp = ""
+        idCheck = 0
+        nicknameTemp = ""
+        nickCheck = 0
+        text_signupidcheck.text = ""
+        text_signupnicknamecheck.text = ""
+    }
+
+    //사용자가 뒤로가기 키 눌렀을때
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if(idTemp != "") {
+            VolleyService.deleteId(idTemp, this@Signup3Activity, {success->
+            })
+        }
+        idTemp = ""
+        idCheck = 0
+        nicknameTemp = ""
+        nickCheck = 0
+        text_signupidcheck.text = ""
+        text_signupnicknamecheck.text = ""
     }
 
     fun pwLengthCheck() {
@@ -79,12 +115,54 @@ class Signup3Activity : AppCompatActivity() {
         }
     }
 
+    fun idCheck() {
+        VolleyService.idCheckReq(edit_signupid.text.toString(), this@Signup3Activity,{ success->
+            if(success == 0)
+            {
+                text_signupidcheck.text = "중복된 아이디 입니다."
+                text_signupidcheck.setTextColor(Color.parseColor("#FF0000"))
+                idCheck = 0
+            }
+            else if(success == 1)
+            {
+                VolleyService.insertId(edit_signupid.text.toString(), univName, univDept, this@Signup3Activity, { success->
+                })
+                idTemp = edit_signupid.text.toString()
+                text_signupidcheck.text = "사용가능한 아이디입니다."
+                text_signupidcheck.setTextColor(Color.parseColor("#008000"))
+                idCheck = 1
+            }
+        })
+    }
+
+    fun nicknameCheck() {
+        VolleyService.nicknameCheckReq(edit_signupnickname.text.toString(), this, {success->
+            if(success == 0)
+            {
+                text_signupnicknamecheck.text = "중복된 닉네임 입니다."
+                text_signupnicknamecheck.setTextColor(Color.parseColor("#FF0000"))
+                nickCheck = 0
+            }
+            else if(success == 1)
+            {
+                VolleyService.insertNickname(idTemp, edit_signupnickname.text.toString(), this, {success->
+                })
+                nicknameTemp = edit_signupnickname.text.toString()
+                text_signupnicknamecheck.text = "사용가능한 닉네임 입니다."
+                text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
+                nickCheck = 1
+            }
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup3)
 
         var intent = intent
         var univMail = intent.getStringExtra("univMail")
+        univName = intent.getStringExtra("univName")
+        univDept = intent.getStringExtra("univDept")
 
         edit_signupwebmail.setText(univMail)
         edit_signupwebmail.setEnabled(false)
@@ -95,20 +173,33 @@ class Signup3Activity : AppCompatActivity() {
 
         //아이디 중복체크
         btn_signupidcheck.setOnClickListener{
-            VolleyService.idCheckReq(edit_signupid.text.toString(), this@Signup3Activity,{ success->
-                if(success == 0)
+            if(edit_signupid.text.toString().length < 5)
+            {
+                text_signupidcheck.text = "아이디는 5자리 이상 이어야 합니다."
+                text_signupidcheck.setTextColor(Color.parseColor("#FF0000"))
+            }
+            else
+            {
+                if(idTemp == "")
                 {
-                    text_signupidcheck.text = "중복된 아이디 입니다."
-                    text_signupidcheck.setTextColor(Color.parseColor("#FF0000"))
-                    idCheck = 0
+                    idCheck()
                 }
-                else if(success == 1)
+                else
                 {
-                    text_signupidcheck.text = "사용가능한 아이디입니다."
-                    text_signupidcheck.setTextColor(Color.parseColor("#008000"))
-                    idCheck = 1
+                    if(idTemp != edit_signupid.text.toString())
+                    {
+                        VolleyService.deleteId(idTemp, this@Signup3Activity, {success->
+                        })
+                        idCheck()
+                    }
+                    else if(idTemp == edit_signupid.text.toString())
+                    {
+                        text_signupidcheck.text = "사용가능한 아이디입니다."
+                        text_signupidcheck.setTextColor(Color.parseColor("#008000"))
+                        idCheck = 1
+                    }
                 }
-            })
+            }
         }
 
         edit_signupid.addTextChangedListener(object : TextWatcher {
@@ -137,20 +228,31 @@ class Signup3Activity : AppCompatActivity() {
         }
 
         btn_signupnicknamecheck.setOnClickListener{
-            VolleyService.nicknameCheckReq(edit_signupnickname.text.toString(), this, {success->
-                if(success == 0)
+            if(idCheck == 0)
+            {
+                text_signupnicknamecheck.text = "아이디를 확인해주세요."
+                text_signupnicknamecheck.setTextColor(Color.parseColor("#FF0000"))
+            }
+            else
+            {
+                if(nicknameTemp == "")
                 {
-                    text_signupnicknamecheck.text = "중복된 닉네임 입니다."
-                    text_signupnicknamecheck.setTextColor(Color.parseColor("#FF0000"))
-                    nickCheck = 0
+                    nicknameCheck()
                 }
-                else if(success == 1)
+                else
                 {
-                    text_signupnicknamecheck.text = "사용가능한 닉네임 입니다."
-                    text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
-                    nickCheck = 1
+                    if(nicknameTemp != edit_signupnickname.text.toString())
+                    {
+                        nicknameCheck()
+                    }
+                    else if(nicknameTemp == edit_signupnickname.text.toString())
+                    {
+                        text_signupnicknamecheck.text = "사용가능한 아이디입니다."
+                        text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
+                        nickCheck = 1
+                    }
                 }
-            })
+            }
         }
 
         edit_signupnickname.addTextChangedListener(object : TextWatcher {
