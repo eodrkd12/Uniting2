@@ -37,6 +37,9 @@ class SettingActivity : AppCompatActivity() {
     var dialogBtnCancel: Button? = null
     var nicknameTemp: String = ""
     var nicknameCheck: Int = 0
+    var dialogimagechange:Button?=null
+
+    var dialog_imageView:View?=null
 
     fun nicknameCheck() {
         VolleyService.nicknameCheckReq(dialogEditChange!!.text.toString(), this, {success->
@@ -102,6 +105,7 @@ class SettingActivity : AppCompatActivity() {
 
                 text_gender.text=gender
                 text_department.text="${UserInfo.UNIV} ${UserInfo.DEPT}"
+
                 text_department.text="계명대학교 컴퓨터공학전공"
                 text_hobby.text="취미 : ${UserInfo.HOBBY}"
                 text_personality.text="성격 : ${UserInfo.PERSONALITY}"
@@ -112,6 +116,12 @@ class SettingActivity : AppCompatActivity() {
                     val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
                     img_profile.setImageBitmap(image)
+                })
+
+                text_imagechange.setOnClickListener({
+                    dialog_imageView = layoutInflater.inflate(R.layout.dialog_changenickname, null)
+                    dialogBtnCancel = dialogView!!.findViewById<Button>(R.id.btn_changecancel)
+                    dialogimagechange=dialogView!!.findViewById<Button>(R.id.btn_changeimage)
                 })
 
                 text_changenickname.setOnClickListener {
