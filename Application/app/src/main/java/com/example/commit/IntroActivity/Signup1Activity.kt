@@ -40,9 +40,9 @@ class Signup1Activity : AppCompatActivity() {
     companion object {
         var btnSignup1next: Button? = null
         var editUnivname:EditText? = null
-        var editMajorname:EditText? = null
-        var universityRV: RecyclerView? = null
-        var majorRV: RecyclerView? = null
+        var editDeptname:EditText? = null
+        var rvUniv: RecyclerView? = null
+        var rvDept: RecyclerView? = null
         var majorArray: JSONArray? = null
         var majorList: ArrayList<String> = arrayListOf()
         var univMail: String? = null
@@ -57,10 +57,10 @@ class Signup1Activity : AppCompatActivity() {
 
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        editMajorname = findViewById(R.id.edit_majorname)
+        editDeptname = findViewById(R.id.edit_deptname)
         editUnivname = findViewById(R.id.edit_universityname)
-        universityRV = findViewById(R.id.rv_university)
-        majorRV = findViewById(R.id.rv_major)
+        rvUniv = findViewById(R.id.rv_university)
+        rvDept = findViewById(R.id.rv_dept)
         btnSignup1next = findViewById(R.id.btn_signup1next)
 
         var univArray: JSONArray? = null
@@ -98,7 +98,7 @@ class Signup1Activity : AppCompatActivity() {
                     edit_universityname.setFocusable(true)
                     edit_universityname.setText(null)
                     edit_universityname.setCursorVisible(true)
-                    edit_majorname.setText(null)
+                    edit_deptname.setText(null)
                     btn_signup1next.setEnabled(false)
                     majorList.clear()
                     majorFilter.clear()
@@ -127,9 +127,9 @@ class Signup1Activity : AppCompatActivity() {
                             univFilter.add(University(univList.get(i).univName, univList.get(i).univMail))
                         }
                     }
-                    universityRV!!.setHasFixedSize(true)
-                    universityRV!!.layoutManager = LinearLayoutManager(this@Signup1Activity, RecyclerView.VERTICAL, false)
-                    universityRV!!.adapter = UniversitySearchAdapter(this@Signup1Activity, univFilter)
+                    rvUniv!!.setHasFixedSize(true)
+                    rvUniv!!.layoutManager = LinearLayoutManager(this@Signup1Activity, RecyclerView.VERTICAL, false)
+                    rvUniv!!.adapter = UniversitySearchAdapter(this@Signup1Activity, univFilter)
                 }
             }
         })
@@ -142,18 +142,18 @@ class Signup1Activity : AppCompatActivity() {
             }
         }*/
 
-        edit_majorname.setOnTouchListener{view, event ->
+        edit_deptname.setOnTouchListener{view, event ->
             when(event.action) {
                 MotionEvent.ACTION_DOWN->{
-                    edit_majorname.setCursorVisible(true)
-                    edit_majorname.setText(null)
+                    edit_deptname.setCursorVisible(true)
+                    edit_deptname.setText(null)
                     btn_signup1next.setEnabled(false)
                 }
             }
             false
         }
 
-        edit_majorname.addTextChangedListener(object : TextWatcher {
+        edit_deptname.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
 
             }
@@ -170,13 +170,13 @@ class Signup1Activity : AppCompatActivity() {
                 else{
                     majorFilter.clear()
                     for(i in 0..majorList.size-1) {
-                        if((majorList.get(i)!!.contains(edit_majorname.text) == true) && edit_majorname.text.toString() != "") {
+                        if((majorList.get(i)!!.contains(edit_deptname.text) == true) && edit_deptname.text.toString() != "") {
                             majorFilter.add(majorList.get(i))
                         }
                     }
-                    majorRV!!.setHasFixedSize(true)
-                    majorRV!!.layoutManager = LinearLayoutManager(this@Signup1Activity, RecyclerView.VERTICAL, false)
-                    majorRV!!.adapter = MajorSearchAdapter(this@Signup1Activity, majorFilter)
+                    rvDept!!.setHasFixedSize(true)
+                    rvDept!!.layoutManager = LinearLayoutManager(this@Signup1Activity, RecyclerView.VERTICAL, false)
+                    rvDept!!.adapter = MajorSearchAdapter(this@Signup1Activity, majorFilter)
                 }
             }
         })
@@ -185,7 +185,7 @@ class Signup1Activity : AppCompatActivity() {
             var intent = Intent(this, Signup2Activity::class.java)
             intent.putExtra("univMail", univMail)
             intent.putExtra("univName", editUnivname!!.text.toString())
-            intent.putExtra("univMajor", editMajorname!!.text.toString())
+            intent.putExtra("univMajor", editDeptname!!.text.toString())
             startActivity(intent)
         }
 

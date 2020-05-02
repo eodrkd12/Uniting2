@@ -17,18 +17,30 @@ import android.text.TextWatcher
 import android.util.Base64
 
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.commit.Adapter.DeptChangeAdapter
+import com.example.commit.Adapter.MajorSearchAdapter
+import com.example.commit.Adapter.PersonalityAdapter
 import com.example.commit.IntroActivity.LoginActivity
 import com.example.commit.R
 import com.example.commit.Class.UserInfo
+import com.example.commit.ListItem.Personality
 import com.example.commit.Singleton.VolleyService
 import kotlinx.android.synthetic.main.activity_dating_on_off.*
 import kotlinx.android.synthetic.main.activity_join5.*
 import kotlinx.android.synthetic.main.activity_profile.*
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
@@ -53,8 +65,25 @@ class SettingActivity : AppCompatActivity() {
     var nicknameCheck: Int = 0
     var dialogimagechange_phone:Button?=null
     var dialogimagechange_cam:Button?=null
-
     var dialog_imageView:View?=null
+    var dialogBtnPass: TextView? = null
+    var dialogBtnSave: TextView? = null
+    var dialogTextTitle: TextView? = null
+    var dialogRvPersonality: RecyclerView? = null
+    var personality:String? = ""
+    var personalityList: ArrayList<Personality>? = null
+    var count:Int = 0
+
+    companion object{
+        var deptList: ArrayList<String> = arrayListOf()
+        var deptFilter: ArrayList<String> = arrayListOf()
+        var deptArray: JSONArray? = null
+        var dialogEditDept: EditText? = null
+        var dialogRvDept: RecyclerView? = null
+        var dialogBtnChangeDept: Button? = null
+        var imm: InputMethodManager? = null
+    }
+
 
     fun nicknameCheck() {
         VolleyService.nicknameCheckReq(dialogEditChange!!.text.toString(), this, {success->
@@ -62,6 +91,7 @@ class SettingActivity : AppCompatActivity() {
             {
                 dialogTextCheck!!.setText("중복된 닉네임입니다.")
                 dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
+                nicknameCheck = 0
             }
             else if(success==1)
             {
@@ -70,6 +100,7 @@ class SettingActivity : AppCompatActivity() {
                     {
                         dialogTextCheck!!.setText("중복된 닉네임입니다.")
                         dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
+                        nicknameCheck = 0
                     }
                     else if(success==1)
                     {
@@ -84,17 +115,55 @@ class SettingActivity : AppCompatActivity() {
         })
     }
 
+    fun changePersonality() {
+        val hobbyList = arrayListOf(Personality("운동하기"), Personality("게임하기"), Personality("카페가기"), Personality("노래부르기"), Personality("여행가기"), Personality("춤추기"), Personality("독서하기"), Personality("요리하기"))
+        dialog = Dialog(this)
+        dialogView = layoutInflater.inflate(R.layout.dialog_personality, null)
+        dialogBtnPass = dialogView!!.findViewById<TextView>(R.id.text_personalitypass)
+        dialogTextTitle = dialogView!!.findViewById<TextView>(R.id.text_personalitytitle)
+        dialogBtnSave = dialogView!!.findViewById<TextView>(R.id.text_personalitysave)
+        dialogRvPersonality = dialogView!!.findViewById<RecyclerView>(R.id.rv_personality)
+
+        dialogBtnPass!!.text="저장"
+        dialogBtnSave!!.text="취소"
+
+        dialogBtnSave!!.setOnClickListener {
+            dialog!!.dismiss()
+        }
+
+        dialogRvPersonality!!.setHasFixedSize(true)
+        dialogRvPersonality!!.layoutManager = GridLayoutManager(this, 2)
+        dialogRvPersonality!!.adapter = PersonalityAdapter(personalityList!!)
+    }
+
+    fun personalityCheck() {
+        personality = ""
+        count = 0
+        for (i in 0..personalityList!!.size - 1) {
+            if (personalityList!!.get(i).isSelected == true) {
+                count++
+            }
+        }
+
+        var array = arrayListOf<String>()
+        for (i in 0..personalityList!!.size - 1) {
+            if (personalityList!!.get(i).isSelected == true) {
+                array.add(personalityList!!.get(i).title!!)
+            }
+        }
+        for (i in 0..array.size - 1) {
+            personality += array[i]
+            if (i < array.size - 1) personality += ", "
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var intent=intent
+        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
 
         var tag=intent.getStringExtra("tag")
-
-        dialog = Dialog(this)
-
-
-
 
         when(tag){
             "프로필 보기" ->{
@@ -121,7 +190,7 @@ class SettingActivity : AppCompatActivity() {
                 text_gender.text=gender
                 text_department.text="${UserInfo.UNIV} ${UserInfo.DEPT}"
 
-                text_department.text="계명대학교 컴퓨터공학전공"
+               // text_department.text="계명대학교 컴퓨터공학전공"
                 text_hobby.text="취미 : ${UserInfo.HOBBY}"
                 text_personality.text="성격 : ${UserInfo.PERSONALITY}"
 
@@ -160,6 +229,7 @@ class SettingActivity : AppCompatActivity() {
                 })
 
                 text_changenickname.setOnClickListener {
+                    dialog = Dialog(this)
                     dialogView = layoutInflater.inflate(R.layout.dialog_changenickname, null)
                     dialogEditChange = dialogView!!.findViewById<EditText>(R.id.edit_change)
                     dialogBtnCheck = dialogView!!.findViewById<Button>(R.id.btn_changecheck)
@@ -245,10 +315,114 @@ class SettingActivity : AppCompatActivity() {
                     dialog!!.show()
                 }
 
+                text_changedept.setOnClickListener {
+                    deptList.clear()
+                    VolleyService.search_department(UserInfo.UNIV, this, {success->
+                        deptArray = success
+                        for(i in 0..deptArray!!.length()-1)
+                        {
+                            var json = JSONObject()
+                            json = deptArray!![i] as JSONObject
 
+                            var deptName = json.getString("dept_name")
+                            deptList.add(deptName)
+                        }
+                    })
+                    dialog = Dialog(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar)
+                    dialogView = layoutInflater.inflate(R.layout.activity_signup1, null)
+                    var dialogEditUniv = dialogView!!.findViewById<EditText>(R.id.edit_universityname)
+                    var dialogTextTitle = dialogView!!.findViewById<TextView>(R.id.textView8)
+                    dialogEditDept = dialogView!!.findViewById<EditText>(R.id.edit_deptname)
+                    dialogRvDept = dialogView!!.findViewById<RecyclerView>(R.id.rv_dept)
+                    dialogBtnChangeDept = dialogView!!.findViewById<Button>(R.id.btn_signup1next)
 
+                    dialogTextTitle.setText("학과변경")
+                    dialogEditUniv.setText(UserInfo.UNIV)
+                    dialogEditUniv.setEnabled(false)
 
+                    dialogEditDept!!.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(p0: Editable?) {
 
+                        }
+
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                            if(deptList.size == 0)
+                            {
+                                //Toast.makeText(this@Signup1Activity, "없음", Toast.LENGTH_SHORT).show()
+                            }
+                            else{
+                                deptFilter.clear()
+                                for(i in 0..deptList.size-1) {
+                                    if((deptList.get(i)!!.contains(dialogEditDept!!.text) == true) && dialogEditDept!!.text.toString() != "") {
+                                        deptFilter.add(deptList.get(i))
+                                    }
+                                }
+                                dialogRvDept!!.setHasFixedSize(true)
+                                dialogRvDept!!.layoutManager = LinearLayoutManager(this@SettingActivity, RecyclerView.VERTICAL, false)
+                                dialogRvDept!!.adapter = DeptChangeAdapter(this@SettingActivity, deptFilter)
+                            }
+                        }
+                    })
+                    dialogEditDept!!.setOnTouchListener{view, event ->
+                        when(event.action) {
+                            MotionEvent.ACTION_DOWN->{
+                                dialogEditDept!!.setCursorVisible(true)
+                                dialogEditDept!!.setText(null)
+                                dialogBtnChangeDept!!.setEnabled(false)
+                            }
+                        }
+                        false
+                    }
+
+                    dialogBtnChangeDept!!.setOnClickListener{
+                        VolleyService.changeDeptname(UserInfo.ID, dialogEditDept!!.text.toString(), this, {success->})
+                        dialog!!.dismiss()
+                    }
+
+                    dialog!!.getWindow().statusBarColor = Color.TRANSPARENT
+                    dialog!!.getWindow().getAttributes().windowAnimations = R.style.AnimationPopupStyle
+                    dialog!!.addContentView(dialogView, ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT))
+                    dialog!!.show()
+                }
+
+                text_changehobby.setOnClickListener {
+                    personalityList = arrayListOf(
+                        Personality("운동하기"),
+                        Personality("게임하기"),
+                        Personality("카페가기"),
+                        Personality("노래부르기"),
+                        Personality("여행가기"),
+                        Personality("춤추기"),
+                        Personality("독서하기"),
+                        Personality("요리하기")
+                    )
+
+                    changePersonality()
+
+                    dialogTextTitle!!.text = "취미변경"
+
+                    dialogBtnPass!!.setOnClickListener {
+                        personalityCheck()
+                        if(count<2)
+                        {
+                            Toast.makeText(this, "2개이상선택해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                        else
+                        {
+                            VolleyService.changeHobby(UserInfo.ID, personality!!, this, {success->
+                                UserInfo.HOBBY=personality!!
+                            })
+                            dialog!!.dismiss()
+                        }
+                    }
+
+                    dialog!!.setContentView(dialogView)
+                    dialog!!.show()
+                }
 
             }
             "알림 설정"->{

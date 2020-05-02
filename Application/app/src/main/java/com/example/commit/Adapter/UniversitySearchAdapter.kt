@@ -49,7 +49,7 @@ class UniversitySearchAdapter(val context: Context, val univFilter:ArrayList<Uni
                 Signup1Activity.univMail = univFilter.get(position).univMail
                 Signup1Activity.editUnivname!!.setText(univFilter.get(position).univName)
                 Signup1Activity.editUnivname!!.setCursorVisible(false)
-                Signup1Activity.universityRV!!.adapter=null
+                Signup1Activity.rvUniv!!.adapter=null
                 Signup1Activity.imm!!.hideSoftInputFromWindow(Signup1Activity.editUnivname!!.windowToken, 0)
                 //Signup1Activity.editUnivname!!.setEnabled(false)
                 //Toast.makeText(context, univFilter.size.toString(), Toast.LENGTH_SHORT).show()

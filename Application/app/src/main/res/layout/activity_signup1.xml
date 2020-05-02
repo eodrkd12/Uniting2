@@ -35,16 +35,16 @@
             app:layout_constraintVertical_bias="0.001" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_major"
+            android:id="@+id/rv_dept"
             android:layout_width="340dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/edit_majorname"
+            app:layout_constraintEnd_toEndOf="@+id/edit_deptname"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/edit_majorname"
-            app:layout_constraintTop_toBottomOf="@+id/edit_majorname" />
+            app:layout_constraintStart_toStartOf="@+id/edit_deptname"
+            app:layout_constraintTop_toBottomOf="@+id/edit_deptname" />
 
     <EditText
-            android:id="@+id/edit_majorname"
+            android:id="@+id/edit_deptname"
             android:layout_width="340dp"
             android:layout_height="42dp"
             android:background="@drawable/signup_university_edittext"
