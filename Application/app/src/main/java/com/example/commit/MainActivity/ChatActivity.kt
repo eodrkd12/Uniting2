@@ -62,7 +62,7 @@ class ChatActivity : AppCompatActivity() {
         btn_agree.setOnClickListener {
 
             VolleyService.chatAgreeReq(roomId,this,{success ->
-                VolleyService.sendFCMReq(roomId!!,"요청 수락","${UserInfo.NICKNAME}님이 대화 요청을 수락하였습니다",this)
+                VolleyService.sendFCMReq(roomId!!,"CHAT_AGREE","${UserInfo.NICKNAME}님이 대화 요청을 수락하였습니다",this)
             })
 
             layout_agree.visibility=View.GONE
@@ -158,7 +158,7 @@ class ChatActivity : AppCompatActivity() {
         }
         btn_disagree.setOnClickListener {
             VolleyService.exitReq(UserInfo.NICKNAME, roomId!!, this, { success ->
-                VolleyService.sendFCMReq(roomId!!,"요청 수락","${UserInfo.NICKNAME}님이 대화 요청을 거부하였습니다",this)
+                VolleyService.sendFCMReq(roomId!!,"CHAT_DISAGREE","${UserInfo.NICKNAME}님이 대화 요청을 거부하였습니다",this)
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(roomId!!)
                 finish()
             })

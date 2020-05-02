@@ -15,10 +15,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:fontFamily="@font/alfa_slab_one"
-            android:text="대만추"
+            android:text="Uniting"
             android:textColor="#00BFFF"
             android:textSize="25dp"
-            android:textStyle="bold|italic"
             app:layout_constraintBottom_toTopOf="@+id/frame_main"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

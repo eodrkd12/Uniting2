@@ -93,12 +93,13 @@ class SettingActivity : AppCompatActivity() {
 
         dialog = Dialog(this)
 
-
-
-
         when(tag){
             "프로필 보기" ->{
                 setContentView(R.layout.activity_profile)
+
+                var background=this.getDrawable(R.drawable.image_profile)
+                img_profile.background=background
+                img_profile.clipToOutline=true
 
                 var gender=""
                 if(UserInfo.GENDER=="M"){
@@ -300,21 +301,19 @@ class SettingActivity : AppCompatActivity() {
                 Log.d("uniting","CAMERA")
                 val imageBitmap = data!!.extras.get("data") as Bitmap
                 img_profile.setImageBitmap(imageBitmap)
-                //var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
-                //VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
+                var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
+                VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
 
             }
             PICK_FROM_ALBUM -> {
                 Log.d("uniting","ALBUM")
                 imageCaptureUri=data!!.data
 
-                var bitmap: Bitmap? = null
-
                 try {
                     val imageBitmap= MediaStore.Images.Media.getBitmap(this.contentResolver,imageCaptureUri)
                     img_profile.setImageBitmap(imageBitmap)
-                    //var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
-                    //VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
+                    var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
+                    VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
                     
                 } catch (e: FileNotFoundException) {
                     // TODO Auto-generated catch block

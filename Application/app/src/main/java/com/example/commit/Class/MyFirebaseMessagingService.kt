@@ -27,8 +27,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(p0: RemoteMessage) {
         if(p0.notification!=null){
+            Log.d("unitnig","${p0.data},${p0.notification}")
             if(!isAppOnForeground(this))
                 sendNotification(p0.to,p0.notification?.title,p0.notification?.body)
+            else{
+            }
         }
     }
 
@@ -44,7 +47,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         var notificationBuilder=NotificationCompat.Builder(this,"fcm_uniting")
             .setSmallIcon(R.mipmap.ic_launcher) // 로고
-            .setContentTitle("테스트")
+            .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
             .setSound(notificationSound)

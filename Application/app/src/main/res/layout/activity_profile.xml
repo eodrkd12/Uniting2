@@ -121,7 +121,7 @@
                 app:layout_constraintStart_toStartOf="@+id/text_nickname"
                 app:layout_constraintTop_toBottomOf="@+id/text_hobby" />
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <!--<com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/img_profile"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
@@ -133,6 +133,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_corner_radius="30dp"
+                tools:srcCompat="@android:drawable/ic_menu_help" />-->
+        <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@android:drawable/ic_menu_help" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
