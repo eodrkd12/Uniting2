@@ -1139,7 +1139,7 @@ object VolleyService {
     }
 
     fun chatAgreeReq(roomId: String?, context: Context, success: (String) -> Unit) {
-        var url = "${roomId}/join_room/agree"
+        var url = "${ip}/join_room/agree"
 
         var jsonObject = JSONObject()
         jsonObject.put("room_id", roomId)
