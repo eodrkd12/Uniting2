@@ -891,7 +891,7 @@ object VolleyService {
     }
 
     fun getImageReq(nickname: String, context: Context, success: (JSONObject?) -> Unit) {
-        var url = "http://52.78.27.41:1901/user/getImage"
+        var url = "${ip}/user/getImage"
 
         var json = JSONObject()
         json.put("nickname", nickname)
@@ -1271,6 +1271,26 @@ object VolleyService {
             jsonObject,
             Response.Listener {
                 success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun updateImageReq(nickname:String, bitmap: Bitmap, context:Context) {
+        var url = "${ip}/user/update/image"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+        jsonObject.put("bitmap", bitmap)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
             },
             Response.ErrorListener {
             }) {

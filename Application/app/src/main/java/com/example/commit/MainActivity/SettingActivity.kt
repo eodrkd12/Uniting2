@@ -6,8 +6,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
@@ -23,10 +27,20 @@ import com.example.commit.R
 import com.example.commit.Class.UserInfo
 import com.example.commit.Singleton.VolleyService
 import kotlinx.android.synthetic.main.activity_dating_on_off.*
+import kotlinx.android.synthetic.main.activity_join5.*
 import kotlinx.android.synthetic.main.activity_profile.*
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 
 class SettingActivity : AppCompatActivity() {
+
+    val PICK_FROM_CAMERA=0
+    val PICK_FROM_ALBUM=1
+    val CROP_FROM_CAMERA=2
+    val CROP_FROM_ALBUM=3
+
+    var imageCaptureUri: Uri?=null
 
     var dialog:Dialog? = null
     var dialogView: View? = null
@@ -37,6 +51,10 @@ class SettingActivity : AppCompatActivity() {
     var dialogBtnCancel: Button? = null
     var nicknameTemp: String = ""
     var nicknameCheck: Int = 0
+    var dialogimagechange_phone:Button?=null
+    var dialogimagechange_cam:Button?=null
+
+    var dialog_imageView:View?=null
 
     fun nicknameCheck() {
         VolleyService.nicknameCheckReq(dialogEditChange!!.text.toString(), this, {success->
@@ -102,6 +120,7 @@ class SettingActivity : AppCompatActivity() {
 
                 text_gender.text=gender
                 text_department.text="${UserInfo.UNIV} ${UserInfo.DEPT}"
+
                 text_department.text="계명대학교 컴퓨터공학전공"
                 text_hobby.text="취미 : ${UserInfo.HOBBY}"
                 text_personality.text="성격 : ${UserInfo.PERSONALITY}"
@@ -112,6 +131,32 @@ class SettingActivity : AppCompatActivity() {
                     val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
                     img_profile.setImageBitmap(image)
+                })
+
+                text_imagechange.setOnClickListener({
+                    dialog_imageView = layoutInflater.inflate(R.layout.dialog_imagechange, null)
+                    dialogBtnCancel = dialog_imageView!!.findViewById<Button>(R.id.btn_imagechangecancel)
+                    dialogimagechange_phone=dialog_imageView!!.findViewById<Button>(R.id.btn_changeimage_from_phone)
+                    dialogimagechange_cam=dialog_imageView!!.findViewById<Button>(R.id.btn_changeimage_from_cam)
+
+                    dialogimagechange_phone!!.setOnClickListener({
+                        //이미지변경버튼
+                        var albumIntent=Intent(Intent.ACTION_PICK)
+                        albumIntent.setType(MediaStore.Images.Media.CONTENT_TYPE)
+                        startActivityForResult(albumIntent,PICK_FROM_ALBUM)
+                        dialog!!.dismiss()
+                    })
+                    dialogimagechange_cam!!.setOnClickListener({
+                        var cameraIntent=Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        startActivityForResult(cameraIntent,PICK_FROM_CAMERA)
+                        dialog!!.dismiss()
+                    })
+                    dialogBtnCancel!!.setOnClickListener({
+                        //취소버튼
+                    })
+                    dialog!!.setContentView(dialog_imageView)
+                    dialog!!.show()
+
                 })
 
                 text_changenickname.setOnClickListener {
@@ -126,10 +171,15 @@ class SettingActivity : AppCompatActivity() {
                         if(dialogEditChange!!.text.toString().length < 3)
                         {
                             dialogTextCheck!!.text = "닉네임은 3자리 이상이어야 합니다."
+                            dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
                         }
                         else
                         {
-                            if(nicknameTemp != dialogEditChange!!.text.toString())
+                            if(nicknameTemp == "")
+                            {
+                                nicknameCheck()
+                            }
+                            else if(nicknameTemp != dialogEditChange!!.text.toString())
                             {
                                 VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
                                 nicknameCheck()
@@ -156,11 +206,14 @@ class SettingActivity : AppCompatActivity() {
                             UserInfo.NICKNAME=nicknameTemp
 
                             Toast.makeText(this, "닉네임 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                            nicknameCheck = 0
+                            nicknameTemp = ""
                             dialog!!.dismiss()
                         }
                         else
                         {
-                            Toast.makeText(this, "닉네임을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                            dialogTextCheck!!.text = "닉네임을 확인해주세요."
+                            dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
                         }
                     }
 
@@ -169,6 +222,8 @@ class SettingActivity : AppCompatActivity() {
                         {
                             VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
                         }
+                        nicknameCheck = 0
+                        nicknameTemp = ""
                         dialog!!.dismiss()
                     }
 
@@ -232,4 +287,53 @@ class SettingActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(data==null) {
+            return
+        }
+
+        Log.d("uniting","onActivityResult")
+
+        when(requestCode){
+            PICK_FROM_CAMERA -> {
+                Log.d("uniting","CAMERA")
+                val imageBitmap = data!!.extras.get("data") as Bitmap
+                img_profile.setImageBitmap(imageBitmap)
+                //var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
+                //VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
+
+            }
+            PICK_FROM_ALBUM -> {
+                Log.d("uniting","ALBUM")
+                imageCaptureUri=data!!.data
+
+                var bitmap: Bitmap? = null
+
+                try {
+                    val imageBitmap= MediaStore.Images.Media.getBitmap(this.contentResolver,imageCaptureUri)
+                    img_profile.setImageBitmap(imageBitmap)
+                    //var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
+                    //VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
+                    
+                } catch (e: FileNotFoundException) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace()
+                }
+
+            }
+            CROP_FROM_CAMERA -> {
+
+            }
+            CROP_FROM_ALBUM -> {
+
+            }
+        }
+
+
+    }
+
 }
