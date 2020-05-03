@@ -984,27 +984,13 @@ object VolleyService {
     }
 
     fun sendFCMReq(roomId: String, title: String, content: String, context: Context) {
-        /*var url="https://fcm.googleapis.com/fcm/send"
 
-        var json=JSONObject()
-        json.put("to","topics/${roomId}")
-        json.put("priority","high")
-
-        var notification=JSONObject()
-        notification.put("body",content)
-        notification.put("title",title)
-        json.put("notification",notification)
-
-        var data=JSONObject()
-        data.put("message",content)
-        data.put("title",title)
-        json.put("data",data)*/
         var url = "${ip}/join_room/fcm/send"
 
         var json = JSONObject()
         json.put("topic", roomId)
         json.put("content", content)
-        json.put("title", title)
+        json.put("title",title)
 
         var request = object : JsonObjectRequest(Method.POST,
             url,
@@ -1053,7 +1039,6 @@ object VolleyService {
                 success(it)
             },
             Response.ErrorListener {
-                Log.d("uniting","${it}")
                 if(it is com.android.volley.ParseError)
                     success(null)
             }) {
@@ -1075,7 +1060,7 @@ object VolleyService {
             url,
             jsonObject,
             Response.Listener {
-                Log.d("uniting", "VolleyService.getMyPartner it : ${it.toString()}")
+
                 success(it)
             },
             Response.ErrorListener {
@@ -1108,11 +1093,9 @@ object VolleyService {
             url,
             jsonObject,
             Response.Listener {
-                Log.d("uniting","${it}")
                 success(it.getString("result"))
             },
             Response.ErrorListener {
-                Log.d("uniting","${it}")
             }) {
         }
         Volley.newRequestQueue(context).add(request)
@@ -1281,9 +1264,52 @@ object VolleyService {
     fun updateImageReq(nickname:String, bitmap: Bitmap, context:Context) {
         var url = "${ip}/user/update/image"
 
+        var stringImage = ImageManager.BitmapToString(bitmap)
+
         var jsonObject = JSONObject()
         jsonObject.put("nickname", nickname)
-        jsonObject.put("bitmap", bitmap)
+        jsonObject.put("bitmap", stringImage)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun removeToken(nickname: String, context: Context) {
+        var url = "${ip}/user/remove/token"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertTokenReq(nickname: String?,token:String?, context: Context) {
+        var url = "${ip}/user/insert/token"
+
+        Log.d("uniting",token)
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+        jsonObject.put("token",token)
 
         var request = object : JsonObjectRequest(
             Method.POST,

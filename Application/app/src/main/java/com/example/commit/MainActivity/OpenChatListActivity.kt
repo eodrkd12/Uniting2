@@ -1,5 +1,6 @@
 package com.example.commit.MainActivity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -36,31 +37,35 @@ class OpenChatListActivity : AppCompatActivity() {
         var OPENCHATRV: RecyclerView? = null
     }
 
+    var chatRoomAdapter:ChatRoomListAdapter?=null
+    var layoutManager:LinearLayoutManager?=null
+    var openchatList: ArrayList<ChatRoomListItem> = arrayListOf()
+    var openchatFilter: ArrayList<ChatRoomListItem> = arrayListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_open_chat_list)
         OPENCHATRV = findViewById(R.id.rv_open)
 
 
-        btn_make.setOnClickListener(View.OnClickListener() {
+        btn_make.setOnClickListener {
             var intent = Intent(this, MakeRoomActivity::class.java)
             startActivity(intent)
         }
-        )
 
         rv_category.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rv_category.adapter = CategoryAdapter(this)
         rv_category.setHasFixedSize(true)
 
-        var chatRoomAdapter = ChatRoomListAdapter(this)
-        rv_open.adapter=chatRoomAdapter
+        chatRoomAdapter = ChatRoomListAdapter(this)
+        rv_open.adapter = chatRoomAdapter
 
-        var layoutManager=LinearLayoutManager(this)
-        rv_open.layoutManager=layoutManager
+        layoutManager = LinearLayoutManager(this)
+        rv_open.layoutManager = layoutManager
         rv_open.setHasFixedSize(true)
 
         VolleyService.openChatRoomListReq(UserInfo.UNIV, CATEGORY, this, { success ->
-            chatRoomAdapter.clear()
+            chatRoomAdapter!!.clear()
 
             var chatRoomArray = success
             if (chatRoomArray!!.length() == 0) {
@@ -76,9 +81,9 @@ class OpenChatListActivity : AppCompatActivity() {
                     var universityName = json.getString("univ_name")
                     var curNum = json.getInt("cur_num")
                     var introduce = json.getString("introduce")
-                    var chatAgree=json.getString("chat_agree")
+                    var chatAgree = json.getString("chat_agree")
 
-                    chatRoomAdapter.addItem(
+                    chatRoomAdapter!!.addItem(
                         roomId,
                         category,
                         maker,
@@ -90,99 +95,92 @@ class OpenChatListActivity : AppCompatActivity() {
                         chatAgree
                     )
                 }
-                chatRoomAdapter.notifyDataSetChanged()
-
+                chatRoomAdapter!!.notifyDataSetChanged()
             }
+        })
+        HANDLER = object : Handler() {
+            override fun handleMessage(msg: Message?) {
+                Log.d("test", "카테고리 메시지 도착 : ${msg!!.what}")
+                when (msg!!.what) {
+                    0 -> {
+                        //카테고리 방 갱신
+                        VolleyService.openChatRoomListReq(
+                            UserInfo.UNIV,
+                            CATEGORY,
+                            INSTANCE!!,
+                            { success ->
+                                rv_open.adapter = chatRoomAdapter
+                                chatRoomAdapter!!.clear()
 
+                                var chatRoomArray = success
+                                if (chatRoomArray!!.length() == 0) {
 
-            HANDLER = object : Handler() {
-                override fun handleMessage(msg: Message?) {
-                    Log.d("test", "카테고리 메시지 도착 : ${msg!!.what}")
-                    when (msg!!.what) {
-                        0 -> {
-                            //카테고리 방 갱신
-                            VolleyService.openChatRoomListReq(
-                                UserInfo.UNIV,
-                                CATEGORY,
-                                INSTANCE!!,
-                                { success ->
-                                    rv_open.adapter = chatRoomAdapter
-                                    chatRoomAdapter.clear()
-
-                                    var chatRoomArray = success
-                                    if (chatRoomArray!!.length() == 0) {
-
-                                    } else {
-                                        for (i in 0..chatRoomArray.length() - 1) {
-                                            var json = chatRoomArray[i] as JSONObject
-                                            var roomId = json.getString("room_id")
-                                            var category = json.getString("cate_name")
-                                            var maker = json.getString("maker")
-                                            var roomTitle = json.getString("room_title")
-                                            var limitNum = json.getInt("limit_num")
-                                            var universityName = json.getString("univ_name")
-                                            var curNum = json.getInt("cur_num")
-                                            var introduce = json.getString("introduce")
-                                            var chatAgree=json.getString("chat_agree")
-                                            chatRoomAdapter.addItem(
-                                                roomId,
-                                                category,
-                                                maker,
-                                                roomTitle,
-                                                limitNum,
-                                                universityName,
-                                                curNum,
-                                                introduce,
-                                                chatAgree
-                                            )
-                                        }
+                                } else {
+                                    for (i in 0..chatRoomArray.length() - 1) {
+                                        var json = chatRoomArray[i] as JSONObject
+                                        var roomId = json.getString("room_id")
+                                        var category = json.getString("cate_name")
+                                        var maker = json.getString("maker")
+                                        var roomTitle = json.getString("room_title")
+                                        var limitNum = json.getInt("limit_num")
+                                        var universityName = json.getString("univ_name")
+                                        var curNum = json.getInt("cur_num")
+                                        var introduce = json.getString("introduce")
+                                        var chatAgree = json.getString("chat_agree")
+                                        chatRoomAdapter!!.addItem(
+                                            roomId,
+                                            category,
+                                            maker,
+                                            roomTitle,
+                                            limitNum,
+                                            universityName,
+                                            curNum,
+                                            introduce,
+                                            chatAgree
+                                        )
                                     }
-                                })
+                                }
+                            })
 
-                            chatRoomAdapter.notifyDataSetChanged()
-                        }
+                        chatRoomAdapter!!.notifyDataSetChanged()
                     }
                 }
             }
-        })
+        }
 
-        //var openchatArray: JSONArray? = null
-        var openchatList: ArrayList<ChatRoomListItem> = arrayListOf()
-        var openchatFilter: ArrayList<ChatRoomListItem> = arrayListOf()
-
-        VolleyService.getSearchReq(UserInfo.UNIV,this, {success ->
-          //  chatRoomAdapter.clear()
+        VolleyService.getSearchReq(UserInfo.UNIV, this, { success ->
             var chatRoomArray = success
 
-                for (i in 0..chatRoomArray!!.length() - 1) {
-                    var json = chatRoomArray!![i] as JSONObject
-                    var roomId = json.getString("room_id")
-                    var category = json.getString("cate_name")
-                    var maker = json.getString("maker")
-                    var roomTitle = json.getString("room_title")
-                    var limitNum = json.getInt("limit_num")
-                    var universityName = json.getString("univ_name")
-                    var curNum = json.getInt("cur_num")
-                    var introduce = json.getString("introduce")
-                    var chatAgree=json.getString("chat_agree")
+            for (i in 0..chatRoomArray!!.length() - 1) {
+                var json = chatRoomArray!![i] as JSONObject
+                var roomId = json.getString("room_id")
+                var category = json.getString("cate_name")
+                var maker = json.getString("maker")
+                var roomTitle = json.getString("room_title")
+                var limitNum = json.getInt("limit_num")
+                var universityName = json.getString("univ_name")
+                var curNum = json.getInt("cur_num")
+                var introduce = json.getString("introduce")
+                var chatAgree = json.getString("chat_agree")
 
-                   var item:ChatRoomListItem = ChatRoomListItem()
-                    item.roomId=roomId
-                    item.cateName=category
-                    item.maker=maker
-                    item.roomTitle=roomTitle
-                    item.limitNum=limitNum
-                    item.universityName=universityName
-                    item.curNum=curNum
-                    item.introduce=introduce
-                    item.chatAgree=chatAgree
+                var item: ChatRoomListItem = ChatRoomListItem()
+                item.roomId = roomId
+                item.cateName = category
+                item.maker = maker
+                item.roomTitle = roomTitle
+                item.limitNum = limitNum
+                item.universityName = universityName
+                item.curNum = curNum
+                item.introduce = introduce
+                item.chatAgree = chatAgree
 
-                   openchatList.add(item)
-
-                }
-                Toast.makeText(this@OpenChatListActivity, openchatList.size.toString(), Toast.LENGTH_SHORT).show()
-
-
+                openchatList.add(item)
+            }
+            Toast.makeText(
+                this@OpenChatListActivity,
+                openchatList.size.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
         })
 
         text_search.addTextChangedListener(object : TextWatcher {
@@ -196,11 +194,11 @@ class OpenChatListActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (openchatList.size == 0)  {
+                if (openchatList.size == 0) {
 
-                }else{
+                } else {
                     rv_open.adapter = chatRoomAdapter
-                    chatRoomAdapter.clear()
+                    chatRoomAdapter!!.clear()
 
                     openchatFilter.clear()
 
@@ -217,7 +215,7 @@ class OpenChatListActivity : AppCompatActivity() {
                             item.universityName = openchatList.get(i).universityName
                             item.curNum = openchatList.get(i).curNum
                             item.introduce = openchatList.get(i).introduce
-                            item.chatAgree=openchatList.get(i).chatAgree
+                            item.chatAgree = openchatList.get(i).chatAgree
                             openchatFilter.add(item)
 
 
@@ -229,10 +227,10 @@ class OpenChatListActivity : AppCompatActivity() {
                             var universityName = item.universityName
                             var curNum = item.curNum
                             var introduce = item.introduce
-                            var chatAgree=item.chatAgree
+                            var chatAgree = item.chatAgree
 
 
-                            chatRoomAdapter.addItem(
+                            chatRoomAdapter!!.addItem(
                                 roomId.toString(),
                                 cateName.toString(),
                                 maker.toString(),
@@ -244,9 +242,8 @@ class OpenChatListActivity : AppCompatActivity() {
                                 chatAgree.toString()
                             )
 
-                            chatRoomAdapter.notifyDataSetChanged()
-                        }
-                        else if( text_search.text.toString() == "" ){
+                            chatRoomAdapter!!.notifyDataSetChanged()
+                        } else if (text_search.text.toString() == "") {
                             var item: ChatRoomListItem = ChatRoomListItem()
                             item.roomId = openchatList.get(i).roomId
                             item.cateName = openchatList.get(i).cateName
@@ -256,7 +253,7 @@ class OpenChatListActivity : AppCompatActivity() {
                             item.universityName = openchatList.get(i).universityName
                             item.curNum = openchatList.get(i).curNum
                             item.introduce = openchatList.get(i).introduce
-                            item.chatAgree=openchatList.get(i).chatAgree
+                            item.chatAgree = openchatList.get(i).chatAgree
 
                             var roomId = openchatList.get(i).roomId
                             var cateName = openchatList.get(i).cateName
@@ -266,10 +263,10 @@ class OpenChatListActivity : AppCompatActivity() {
                             var universityName = openchatList.get(i).universityName
                             var curNum = openchatList.get(i).curNum
                             var introduce = openchatList.get(i).introduce
-                            var chatAgree=openchatList.get(i).chatAgree
+                            var chatAgree = openchatList.get(i).chatAgree
 
 
-                            chatRoomAdapter.addItem(
+                            chatRoomAdapter!!.addItem(
                                 roomId.toString(),
                                 cateName.toString(),
                                 maker.toString(),
@@ -280,20 +277,96 @@ class OpenChatListActivity : AppCompatActivity() {
                                 introduce.toString(),
                                 chatAgree.toString()
                             )
-
-                            chatRoomAdapter.notifyDataSetChanged()
-
-
+                            chatRoomAdapter!!.notifyDataSetChanged()
                         }
 
                     }
                     rv_open.setHasFixedSize(true)
 
-                   Toast.makeText(this@OpenChatListActivity, openchatFilter.size.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@OpenChatListActivity,
+                        openchatFilter.size.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         })
 
 
+    }
+
+    override fun onResume() {
+
+        super.onResume()
+
+        VolleyService.openChatRoomListReq(UserInfo.UNIV, CATEGORY, this, { success ->
+            chatRoomAdapter!!.clear()
+
+            var chatRoomArray = success
+            if (chatRoomArray!!.length() == 0) {
+
+            } else {
+                for (i in 0..chatRoomArray.length() - 1) {
+                    var json = chatRoomArray[i] as JSONObject
+                    var roomId = json.getString("room_id")
+                    var category = json.getString("cate_name")
+                    var maker = json.getString("maker")
+                    var roomTitle = json.getString("room_title")
+                    var limitNum = json.getInt("limit_num")
+                    var universityName = json.getString("univ_name")
+                    var curNum = json.getInt("cur_num")
+                    var introduce = json.getString("introduce")
+                    var chatAgree = json.getString("chat_agree")
+
+                    chatRoomAdapter!!.addItem(
+                        roomId,
+                        category,
+                        maker,
+                        roomTitle,
+                        limitNum,
+                        universityName,
+                        curNum,
+                        introduce,
+                        chatAgree
+                    )
+                }
+                chatRoomAdapter!!.notifyDataSetChanged()
+            }
+        })
+
+        VolleyService.getSearchReq(UserInfo.UNIV, this, { success ->
+            var chatRoomArray = success
+
+            for (i in 0..chatRoomArray!!.length() - 1) {
+                var json = chatRoomArray!![i] as JSONObject
+                var roomId = json.getString("room_id")
+                var category = json.getString("cate_name")
+                var maker = json.getString("maker")
+                var roomTitle = json.getString("room_title")
+                var limitNum = json.getInt("limit_num")
+                var universityName = json.getString("univ_name")
+                var curNum = json.getInt("cur_num")
+                var introduce = json.getString("introduce")
+                var chatAgree = json.getString("chat_agree")
+
+                var item: ChatRoomListItem = ChatRoomListItem()
+                item.roomId = roomId
+                item.cateName = category
+                item.maker = maker
+                item.roomTitle = roomTitle
+                item.limitNum = limitNum
+                item.universityName = universityName
+                item.curNum = curNum
+                item.introduce = introduce
+                item.chatAgree = chatAgree
+
+                openchatList.add(item)
+            }
+            Toast.makeText(
+                this@OpenChatListActivity,
+                openchatList.size.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
+        })
     }
 }

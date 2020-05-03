@@ -9,4 +9,6 @@
     <color name="colorLime">#00FF00</color>
     <color name="colorSkyBlue">#87CEEB</color>
     <color name="colorDeepSkyblue">#00BFFF</color>
+    <color name="graygray">#E6E6E6</color>
+
 </resources>

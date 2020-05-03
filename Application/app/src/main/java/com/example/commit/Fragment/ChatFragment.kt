@@ -26,23 +26,29 @@ class ChatFragment() : Fragment() {
 
     var myChatAdapter: MyChatListAdapter? = null
 
+    var rvRoom:RecyclerView?=null
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_chat, container, false)
-
         var view = inflater.inflate(R.layout.fragment_chat, container, false)
+        rvRoom = view.findViewById(R.id.rv_room) as RecyclerView
+
+        return view
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         myChatAdapter = MyChatListAdapter(context!!)
-        var rvRoom = view.findViewById(R.id.rv_room) as RecyclerView
         var layoutManager = LinearLayoutManager(context)
-        rvRoom.adapter = myChatAdapter
-        rvRoom.layoutManager = layoutManager
-        rvRoom.setHasFixedSize(true)
-
-        var chatList = ArrayList<MyChatRoomListItem>()
+        rvRoom!!.adapter = myChatAdapter
+        rvRoom!!.layoutManager = layoutManager!!
+        rvRoom!!.setHasFixedSize(true)
 
         VolleyService.myChatRoomListReq(UserInfo.NICKNAME, context!!, { success ->
             myChatAdapter!!.clear()
@@ -62,11 +68,11 @@ class ChatFragment() : Fragment() {
                     var curNum = json.getInt("cur_num")
                     var introduce = json.getString("introduce")
                     var chatAgree=json.getString("chat_agree")
+                    var partner:String?=json.getString("partner")
 
                     if(category=="데이팅") {
-                        var tempTitle=roomTitle.split("&")
-                        if(tempTitle[0]==UserInfo.NICKNAME) roomTitle=tempTitle[1]
-                        else roomTitle=tempTitle[0]
+                        if(maker==UserInfo.NICKNAME) roomTitle=partner
+                        else roomTitle=maker
                     }
 
                     val ref = FirebaseDatabase.getInstance().reference.child("chat").child(roomId)
@@ -100,14 +106,13 @@ class ChatFragment() : Fragment() {
                         introduce,
                         lastChat,
                         lastChatTime,
-                        chatAgree
+                        chatAgree,
+                        partner
                     )
                 }
             }
             myChatAdapter!!.notifyDataSetChanged()
         })
-
-        return view
     }
 
     fun chatConversation(dataSnapshot: DataSnapshot) {

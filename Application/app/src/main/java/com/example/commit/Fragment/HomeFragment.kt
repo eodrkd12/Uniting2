@@ -41,12 +41,6 @@ class HomeFragment() : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        Log.d(
-            "uniting",
-            "MainActivity->HomeFragment : ${UserInfo.NICKNAME} : ${UserInfo.FCM_TOKEN}"
-        )
-
         var view = inflater.inflate(R.layout.fragment_home, container, false)
 
 
@@ -80,7 +74,6 @@ class HomeFragment() : Fragment() {
             startActivity(intent)
         }
         VolleyService.getJoinDating(UserInfo.NICKNAME, activity!!.applicationContext, { success ->
-            Log.d("uniting", success.toString())
             if (success == null) {
                 //데이팅 기능이 꺼져있는 경우
                 textPartnerState.setText("만남 기능이 Off 상태입니다")
@@ -165,7 +158,8 @@ class HomeFragment() : Fragment() {
                                                 "${nickname}"
                                             )
                                             intent.putExtra("category", "데이팅")
-
+                                            intent.putExtra("chat_agree","false")
+                                            intent.putExtra("maker",UserInfo.NICKNAME)
                                             //FCM 주제구독
                                             FirebaseMessaging.getInstance().subscribeToTopic(roomId)
                                                 .addOnCompleteListener {
@@ -181,7 +175,7 @@ class HomeFragment() : Fragment() {
 
                                             VolleyService.sendFCMReq(
                                                 roomId!!,
-                                                "대화 요청",
+                                                "CHAT_REQUEST",
                                                 "${UserInfo.NICKNAME}님이 대화를 요청하였습니다.",
                                                 context!!
                                             )

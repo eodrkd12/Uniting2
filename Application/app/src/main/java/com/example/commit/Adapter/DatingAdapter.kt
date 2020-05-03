@@ -102,7 +102,7 @@ class DatingAdapter(val context: Context) : RecyclerView.Adapter<DatingAdapter.H
 
                             VolleyService.sendFCMReq(
                                 roomId!!,
-                                "대화 요청",
+                                "CHAT_REQUEST",
                                 "${UserInfo.NICKNAME}님이 대화를 요청하였습니다.",
                                 context
                             )
