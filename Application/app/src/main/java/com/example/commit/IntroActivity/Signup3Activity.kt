@@ -145,12 +145,23 @@ class Signup3Activity : AppCompatActivity() {
             }
             else if(success == 1)
             {
-                VolleyService.insertNickname(idTemp, edit_signupnickname.text.toString(), this, {success->
+                VolleyService.checkTmpNickname(edit_signupnickname.text.toString(), this, {success->
+                    if(success == 0)
+                    {
+                        text_signupnicknamecheck.text = "중복된 닉네임 입니다."
+                        text_signupnicknamecheck.setTextColor(Color.parseColor("#FF0000"))
+                        nickCheck = 0
+                    }
+                    else if(success == 1)
+                    {
+                        VolleyService.insertNickname(idTemp, edit_signupnickname.text.toString(), this, {success->
+                        })
+                        nicknameTemp = edit_signupnickname.text.toString()
+                        text_signupnicknamecheck.text = "사용가능한 닉네임 입니다."
+                        text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
+                        nickCheck = 1
+                    }
                 })
-                nicknameTemp = edit_signupnickname.text.toString()
-                text_signupnicknamecheck.text = "사용가능한 닉네임 입니다."
-                text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
-                nickCheck = 1
             }
         })
     }
@@ -235,22 +246,20 @@ class Signup3Activity : AppCompatActivity() {
             }
             else
             {
-                if(nicknameTemp == "")
+                if(edit_signupnickname.text.toString().length < 3)
+                {
+                    text_signupnicknamecheck.text = "닉네임은 3자리 이상이어야합니다."
+                    text_signupnicknamecheck.setTextColor(Color.parseColor("#FF0000"))
+                }
+                else if(nicknameTemp == "" || nicknameTemp != edit_signupnickname.text.toString())
                 {
                     nicknameCheck()
                 }
-                else
+                else if(nicknameTemp == edit_signupnickname.text.toString())
                 {
-                    if(nicknameTemp != edit_signupnickname.text.toString())
-                    {
-                        nicknameCheck()
-                    }
-                    else if(nicknameTemp == edit_signupnickname.text.toString())
-                    {
-                        text_signupnicknamecheck.text = "사용가능한 아이디입니다."
-                        text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
-                        nickCheck = 1
-                    }
+                    text_signupnicknamecheck.text = "사용가능한 아이디입니다."
+                    text_signupnicknamecheck.setTextColor(Color.parseColor("#008000"))
+                    nickCheck = 1
                 }
             }
         }

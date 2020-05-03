@@ -26,35 +26,63 @@
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_user"
-                    android:layout_width="281dp"
-                    android:layout_height="658dp"
-                    android:layout_marginBottom="50dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    android:layout_width="282dp"
+                    android:layout_height="566dp"
+                    android:layout_marginTop="5dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView29"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_me" />
 
             <Button
                     android:id="@+id/exit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="나가기"
+                    android:layout_width="24dp"
+                    android:layout_height="21dp"
+
+                    android:background="@drawable/exit_room_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recycler_user" />
+                    app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
             <TextView
                     android:id="@+id/textView29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:text="대화상대"
-                    android:textSize="20dp"
+                    android:textColor="#000000"
+                    android:textSize="25dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="275dp"
+                    android:layout_height="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/exit_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@color/graygray" />
+
+            <TextView
+                    android:id="@+id/text_me"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:text="TextView"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
+            <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="29dp"
+                    android:layout_height="46dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView29"
+                    tools:srcCompat="@tools:sample/avatars" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.navigation.NavigationView>

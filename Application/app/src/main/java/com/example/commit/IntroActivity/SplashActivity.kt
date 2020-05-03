@@ -21,6 +21,9 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.R
 import android.view.View
+import android.widget.Toast
+import com.example.commit.Singleton.VolleyService
+import org.json.JSONObject
 
 
 class SplashActivity: AppCompatActivity() {
@@ -74,9 +77,103 @@ class SplashActivity: AppCompatActivity() {
         //프리퍼런스 검사 있으면 Main으로 startActivity 호출하고 return
         var userPref=this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         UserInfo.ID=userPref.getString("ID","")
+        UserInfo.PW=userPref.getString("PW","")
         if(UserInfo.ID!="") {
+            VolleyService.loginReq(UserInfo.ID, UserInfo.PW, this, {success->
+                when(success.getInt("code")) {
+                    0 -> {
+                        //통신 실패
+                        Handler().postDelayed({
+                            var intent:Intent = Intent(this,LoginActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)  //액티비티 전환시 애니메이션을 무시
+                            startActivity(intent)
+                            finish()
+                        },Duration)
+                        Toast.makeText(this, "서버와의 통신에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    1 -> {
+                        //로그인 실패 : ID not exist
+                        Handler().postDelayed({
+                            var intent:Intent = Intent(this,LoginActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)  //액티비티 전환시 애니메이션을 무시
+                            startActivity(intent)
+                            finish()
+                        },Duration)
+                        Toast.makeText(this, "계정을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+                    2 -> {
+                        //로그인 실패 : PW error
+                        Handler().postDelayed({
+                            var intent:Intent = Intent(this,LoginActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)  //액티비티 전환시 애니메이션을 무시
+                            startActivity(intent)
+                            finish()
+                        },Duration)
+                        Toast.makeText(this, "ID / PW를 확인해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+                    3 -> {
+                        //로그인 성공
+                        //프리퍼런스 저장
+                        var user = success.getJSONObject("user")
+                        UserInfo.NAME = user.getString("user_name")
+                        UserInfo.BIRTH = user.getString("user_birthday")
+                        UserInfo.GENDER = user.getString("user_gender")
+                        UserInfo.NICKNAME = user.getString("user_nickname")
+                        UserInfo.EMAIL = user.getString("user_email")
+                        UserInfo.UNIV = user.getString("univ_name")
+                        UserInfo.ENTER = user.getString("enter_year")
+                        UserInfo.DEPT = user.getString("dept_name")
+                        UserInfo.IMG = user.getString("user_image")
+                        UserInfo.HOBBY = user.getString("user_hobby")
+                        UserInfo.PERSONALITY = user.getString("user_personality")
+                        //var token=FirebaseInstanceId.getInstance().token
+                        UserInfo.FCM_TOKEN = user.getString("token")
 
-            UserInfo.PW=userPref.getString("PW","")
+                        /*val accountName = getAccount(this)
+                        UserInfo.GOOGLE_ACCOUNT=accountName
+
+                        val scope = "audience:server:client_id:" +
+                                "348791094939-n14jfd8f4epba5ii0m5h39vjedf3647b.apps.googleusercontent.com"
+
+                        var idToken: String? = null
+                        try {
+                            idToken = GoogleAuthUtil.getToken(this, accountName, scope)
+                            UserInfo.GOOGLE_ID_TOKEN=idToken
+                        } catch (e: Exception) {
+                            Log.d("test", "Exception while getting idToken: $e")
+                        }*/
+
+
+                        var pref = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+                        var editor = pref.edit()
+                        editor.putString("ID", UserInfo.ID)
+                            .putString("PW", UserInfo.PW)
+                            .putString("NAME", UserInfo.NAME)
+                            .putString("BIRTH", UserInfo.BIRTH)
+                            .putString("GENDER", UserInfo.GENDER)
+                            .putString("NICKNAME", UserInfo.NICKNAME)
+                            .putString("EMAIL", UserInfo.EMAIL)
+                            .putString("UNIV", UserInfo.UNIV)
+                            .putString("ENTER", UserInfo.ENTER)
+                            .putString("DEPT", UserInfo.DEPT)
+                            .putString("HOBBY", UserInfo.HOBBY)
+                            .putString("PERSONALITY", UserInfo.PERSONALITY)
+                            .putString("IMG", UserInfo.IMG)
+                            .putString("FCM_TOKEN", UserInfo.FCM_TOKEN)
+                            /*.putString("GOOGLE_ID_TOKEN",UserInfo.GOOGLE_ID_TOKEN)
+                            .putString("GOOGLE_ACCOUNT",UserInfo.GOOGLE_ACCOUNT)*/
+                            .apply()
+
+                        Handler().postDelayed({
+                            var intent:Intent = Intent(this,MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)  //액티비티 전환시 애니메이션을 무시
+                            startActivity(intent)
+                            finish()
+                        },Duration)
+                    }
+                }
+            })
+            /*UserInfo.PW=userPref.getString("PW","")
             UserInfo.NAME=userPref.getString("NAME","")
             UserInfo.BIRTH=userPref.getString("BIRTH","")
             UserInfo.GENDER=userPref.getString("GENDER","")
@@ -88,15 +185,9 @@ class SplashActivity: AppCompatActivity() {
             UserInfo.HOBBY=userPref.getString("HOBBY","")
             UserInfo.PERSONALITY=userPref.getString("PERSONALITY","")
             UserInfo.IMG=userPref.getString("IMG","")
-            UserInfo.FCM_TOKEN=userPref.getString("FCM_TOKEN","")
+            UserInfo.FCM_TOKEN=userPref.getString("FCM_TOKEN","")*/
             /*UserInfo.GOOGLE_ID_TOKEN=userPref.getString("GOOGLE_ID_TOKEN","")
             UserInfo.GOOGLE_ACCOUNT=userPref.getString("GOOGLE_ACCOUNT","")*/
-            Handler().postDelayed({
-                var intent:Intent = Intent(this,MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)  //액티비티 전환시 애니메이션을 무시
-                startActivity(intent)
-                finish()
-            },Duration)
         }
         else {
             Handler().postDelayed({
@@ -106,6 +197,8 @@ class SplashActivity: AppCompatActivity() {
                 finish()
             }, Duration)
         }
+
+
 
 
     }
