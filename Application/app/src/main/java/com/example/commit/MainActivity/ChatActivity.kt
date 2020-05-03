@@ -1,11 +1,13 @@
 package com.example.commit.MainActivity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -21,6 +23,7 @@ import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_mainchat.*
+import kotlinx.android.synthetic.main.dialog_personality.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -51,7 +54,6 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
         rv_user = findViewById(R.id.recycler_user)
 
         var intent = intent
@@ -61,80 +63,7 @@ class ChatActivity : AppCompatActivity() {
         title = intent.getStringExtra("title")
         maker = intent.getStringExtra("maker")
         chatAgree = intent.getStringExtra("chat_agree")
-
-        /*edit_chat.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus == true) {
-
-                VolleyService.getJoinTimeReq(roomId!!, UserInfo.NICKNAME, this, { success ->
-                    val ref = FirebaseDatabase.getInstance().reference.child("chat").child(roomId!!)
-                    val query = ref.orderByChild("fulltime").startAt(success, "fulltime")
-
-                    val childEventListener = object : ChildEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                        }
-
-                        override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                        }
-
-                        override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                            chatConversation(p0)
-                        }
-
-                        override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                            chatConversation(p0)
-                        }
-
-                        override fun onChildRemoved(p0: DataSnapshot) {
-                        }
-                    }
-
-                    query.addChildEventListener(childEventListener)
-
-                    btn_send.setOnClickListener {
-                        if (edit_chat.text.toString() != "") {
-
-                            var map = HashMap<String, Any>()
-
-                            val key: String? = ref.push().key
-
-                            ref.updateChildren(map)
-
-                            var root = ref.child(key!!)
-                            var objectMap = HashMap<String, Any>()
-                            val current = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
-                            val noon = current.format(DateTimeFormatter.ofPattern("a"))
-                            var formatter: DateTimeFormatter? = null
-                            if (noon == "PM")
-                                formatter = DateTimeFormatter.ofPattern("오후 hh:mm")
-                            else
-                                formatter = DateTimeFormatter.ofPattern("오전 hh:mm")
-                            val formatted = current.format(formatter)
-                            val fulltime =
-                                current.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-
-                            objectMap.put("room_id", roomId!!)
-                            objectMap.put("speaker", UserInfo.NICKNAME)
-                            objectMap.put("content", edit_chat.text.toString())
-                            objectMap.put("time", formatted)
-                            objectMap.put("fulltime", fulltime)
-
-                            root.updateChildren(objectMap)
-
-                            VolleyService.sendFCMReq(
-                                roomId!!,
-                                title!!,
-                                "${UserInfo.NICKNAME} : ${edit_chat.text}",
-                                this
-                            )
-
-                            edit_chat!!.setText("")
-                            list_chat.setSelection(chatAdapter.count - 1)
-                        }
-                    }
-                })
-
-            }
-        }*/
+        
     }
 
     override fun onResume() {
@@ -318,59 +247,20 @@ class ChatActivity : AppCompatActivity() {
         menu!!.add(0, 0, 0, "메뉴").setIcon(R.drawable.option1_icon)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-        /* menu!!.add("참여중인 유저").setEnabled(false)
-
-         menu.add(UserInfo.NICKNAME)
-
-         VolleyService.getUserInRoom(roomId!!,UserInfo.NICKNAME,this,{success ->
-             for(i in 0..success!!.length()-1){
-                 var jsonObject=success.getJSONObject(i)
-                 var nickname=jsonObject.getString("user_nickname")
-                 var item=menu.add(nickname)
-                 item.setOnMenuItemClickListener {
-                     var intent=Intent(this, ReportPopup::class.java)
-                     intent.putExtra("nickname",nickname)
-                     startActivity(intent)
-                     true
-                 }
-             }
-
-             var exit=menu.add("나가기")
-             exit.setIcon(R.drawable.icon_exit_room)
-
-             exit.setOnMenuItemClickListener {
-                 VolleyService.exitReq(UserInfo.NICKNAME,roomId!!,this,{success -> })
-
-                /* if(category=="데이팅")
-                     VolleyService.datingExitReq(UserInfo.NICKNAME,this)
-
-                 VolleyService.updateFCMGroupReq("remove",notificationKey!!,UserInfo.FCM_TOKEN,roomId!!,this)
-                 var roomPref=this.getSharedPreferences("Room",Context.MODE_PRIVATE)
-                 var editor=roomPref.edit()
-                 var stringSet=roomPref.getStringSet("notification_key",null)
-                 if(stringSet==null){
-                     Log.d("test","방 나가기 오류 : Preference에 데이터가 없습니다.")
-                 }
-                 else{
-                     stringSet.remove(notificationKey)
-                     editor.clear().commit()
-                     editor.putStringSet("notification_key",stringSet).apply()
-                 }
- */
-                 var intent=Intent(this,MainActivity::class.java)
-                 startActivity(intent)
-
-                 true
-             }
-         })*/
         return super.onCreateOptionsMenu(menu)
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             0 -> { // 메뉴 버튼
                 userList.clear()
-                main_layout.openDrawer(GravityCompat.END)    // 네비게이션 드로어 열기
+                main_layout.openDrawer(GravityCompat.END) // 네비게이션 드로어 열기
+                var imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(edit_chat.windowToken, 0)
+                text_me.text=UserInfo.NICKNAME
+
                 VolleyService.getUserInRoom(roomId!!, UserInfo.NICKNAME, this, { success ->
                     for (i in 0..success!!.length() - 1) {
                         var jsonObject = success.getJSONObject(i)
