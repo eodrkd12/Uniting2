@@ -26,6 +26,10 @@ import com.example.commit.IntroActivity.LoginActivity
 import com.example.commit.R
 import com.example.commit.Class.UserInfo
 import com.example.commit.Singleton.VolleyService
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_dating_on_off.*
 import kotlinx.android.synthetic.main.activity_join5.*
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -200,6 +204,34 @@ class SettingActivity : AppCompatActivity() {
                             VolleyService.insertNickname(UserInfo.ID, nicknameTemp, this, {success->})
                             VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
 
+                            var query=FirebaseDatabase.getInstance().reference.child("chat").orderByKey()
+
+                            val childEventListener = object : ChildEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                }
+
+                                override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                                }
+
+                                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                                    Log.d("uniting",p0.getValue() as String)
+                                }
+
+                                override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                                    var i = p0.children.iterator()
+
+                                    while (i.hasNext()) {
+                                        Log.d("uniting","${i.next().toString()}")
+                                    }
+                                }
+
+                                override fun onChildRemoved(p0: DataSnapshot) {
+                                }
+                            }
+
+                            query!!.addChildEventListener(childEventListener)
+
+
                             var pref=this.getSharedPreferences("UserInfo",Context.MODE_PRIVATE)
                             var editor=pref.edit()
                             editor.remove("NICKNAME").commit()
@@ -245,12 +277,6 @@ class SettingActivity : AppCompatActivity() {
                     dialog!!.setContentView(dialogView)
                     dialog!!.show()
                 }
-
-
-
-
-
-
             }
             "알림 설정"->{
                 setContentView(R.layout.activity_alam_setting)
@@ -277,14 +303,6 @@ class SettingActivity : AppCompatActivity() {
                 setContentView(R.layout.activity_withdrawal)
             }
             "로그아웃"->{
-                var pref=this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-                var editor=pref.edit()
-
-                editor.clear()
-                editor.commit()
-
-                var intent= Intent(this, LoginActivity::class.java)
-                startActivity(intent)
             }
         }
     }

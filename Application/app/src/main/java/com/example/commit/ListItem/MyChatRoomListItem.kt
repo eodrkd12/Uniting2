@@ -1,6 +1,6 @@
 package com.example.commit.ListItem
 
-class MyChatRoomListItem(roomId:String?,cateName:String?,maker:String?,roomTitle:String?,limitNum:Int?,universityName:String?,curNum:Int?,introduce:String?,lastChat:String?,lastChatFullTime:String?,chatAgree:String?) {
+class MyChatRoomListItem(roomId:String?,cateName:String?,maker:String?,roomTitle:String?,limitNum:Int?,universityName:String?,curNum:Int?,introduce:String?,lastChat:String?,lastChatFullTime:String?,chatAgree:String?,partner:String?) {
     var roomId:String?=roomId
     var cateName:String?=cateName
     var maker:String?=maker
@@ -13,4 +13,5 @@ class MyChatRoomListItem(roomId:String?,cateName:String?,maker:String?,roomTitle
     var lastChatFullTime:String?=lastChatFullTime
     var lastChatTime:String?=null
     var chatAgree:String?=chatAgree
+    var partner:String?=partner
 }

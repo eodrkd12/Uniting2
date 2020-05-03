@@ -277,10 +277,7 @@ class OpenChatListActivity : AppCompatActivity() {
                                 introduce.toString(),
                                 chatAgree.toString()
                             )
-
                             chatRoomAdapter!!.notifyDataSetChanged()
-
-
                         }
 
                     }

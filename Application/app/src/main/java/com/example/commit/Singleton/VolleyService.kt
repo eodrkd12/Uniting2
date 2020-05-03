@@ -1039,7 +1039,6 @@ object VolleyService {
                 success(it)
             },
             Response.ErrorListener {
-                Log.d("uniting","${it}")
                 if(it is com.android.volley.ParseError)
                     success(null)
             }) {
@@ -1061,7 +1060,7 @@ object VolleyService {
             url,
             jsonObject,
             Response.Listener {
-                Log.d("uniting", "VolleyService.getMyPartner it : ${it.toString()}")
+
                 success(it)
             },
             Response.ErrorListener {
@@ -1094,11 +1093,9 @@ object VolleyService {
             url,
             jsonObject,
             Response.Listener {
-                Log.d("uniting","${it}")
                 success(it.getString("result"))
             },
             Response.ErrorListener {
-                Log.d("uniting","${it}")
             }) {
         }
         Volley.newRequestQueue(context).add(request)
@@ -1272,6 +1269,47 @@ object VolleyService {
         var jsonObject = JSONObject()
         jsonObject.put("nickname", nickname)
         jsonObject.put("bitmap", stringImage)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun removeToken(nickname: String, context: Context) {
+        var url = "${ip}/user/remove/token"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertTokenReq(nickname: String?,token:String?, context: Context) {
+        var url = "${ip}/user/insert/token"
+
+        Log.d("uniting",token)
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+        jsonObject.put("token",token)
 
         var request = object : JsonObjectRequest(
             Method.POST,

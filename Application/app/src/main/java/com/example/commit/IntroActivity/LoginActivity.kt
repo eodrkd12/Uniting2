@@ -64,6 +64,8 @@ class LoginActivity : AppCompatActivity() {
             var id:String=edit_id.text.toString()
             var pw:String=edit_pw.text.toString()
 
+            var token=FirebaseInstanceId.getInstance().token
+
             VolleyService.loginReq(id,pw,this, {success ->
                 when(success.getInt("code")){
                     0 -> {
@@ -95,24 +97,9 @@ class LoginActivity : AppCompatActivity() {
                         UserInfo.IMG=user.getString("user_image")
                         UserInfo.HOBBY=user.getString("user_hobby")
                         UserInfo.PERSONALITY=user.getString("user_personality")
-                        //var token=FirebaseInstanceId.getInstance().token
-                        UserInfo.FCM_TOKEN=user.getString("token")
+                        UserInfo.FCM_TOKEN=token!!
 
-                        /*val accountName = getAccount(this)
-                        UserInfo.GOOGLE_ACCOUNT=accountName
-
-                        val scope = "audience:server:client_id:" +
-                                "348791094939-n14jfd8f4epba5ii0m5h39vjedf3647b.apps.googleusercontent.com"
-
-                        var idToken: String? = null
-                        try {
-                            idToken = GoogleAuthUtil.getToken(this, accountName, scope)
-                            UserInfo.GOOGLE_ID_TOKEN=idToken
-                        } catch (e: Exception) {
-                            Log.d("test", "Exception while getting idToken: $e")
-                        }*/
-
-
+                        VolleyService.insertTokenReq(UserInfo.NICKNAME,token,this)
 
                         var pref=this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
                         var editor=pref.edit()
