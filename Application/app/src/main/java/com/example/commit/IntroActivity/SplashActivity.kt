@@ -75,6 +75,7 @@ class SplashActivity: AppCompatActivity() {
         var userPref=this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         UserInfo.ID=userPref.getString("ID","")
         if(UserInfo.ID!="") {
+
             UserInfo.PW=userPref.getString("PW","")
             UserInfo.NAME=userPref.getString("NAME","")
             UserInfo.BIRTH=userPref.getString("BIRTH","")

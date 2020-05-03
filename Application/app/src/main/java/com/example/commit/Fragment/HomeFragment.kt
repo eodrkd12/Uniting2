@@ -37,6 +37,17 @@ import java.util.*
 
 class HomeFragment() : Fragment() {
 
+    var textPartnerState:TextView? = null
+    var textPartnerNull:TextView? = null
+    var layoutProfile:ConstraintLayout? = null
+    var imgProfile:ImageView? = null
+    var textNickname:TextView? = null
+    var textAge:TextView? = null
+    var textDepartment:TextView? = null
+    var textHobby:TextView? = null
+    var textPersonality:TextView? = null
+    var cardPartner:CardView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,23 +58,20 @@ class HomeFragment() : Fragment() {
         var btnDating = view.findViewById<Button>(R.id.btn_dating)
         var btnOpen = view.findViewById<Button>(R.id.btn_open)
 
-        var textPartnerState = view.findViewById<TextView>(R.id.text_partner_state)
-        var textPartnerNull = view.findViewById<TextView>(R.id.text_partner_null)
+        textPartnerState = view.findViewById<TextView>(R.id.text_partner_state)
+        textPartnerNull = view.findViewById<TextView>(R.id.text_partner_null)
 
-        var layoutProfile = view.findViewById<ConstraintLayout>(R.id.layout_profile)
-        var imgProfile = view.findViewById<ImageView>(R.id.img_profile)
-        var textNickname = view.findViewById<TextView>(R.id.text_nickname)
-        var textAge = view.findViewById<TextView>(R.id.text_age)
-        var textDepartment = view.findViewById<TextView>(R.id.text_department)
-        var textHobby = view.findViewById<TextView>(R.id.text_hobby)
-        var textPersonality = view.findViewById<TextView>(R.id.text_personality)
+        layoutProfile = view.findViewById<ConstraintLayout>(R.id.layout_profile)
+        imgProfile = view.findViewById<ImageView>(R.id.img_profile)
+        textNickname = view.findViewById<TextView>(R.id.text_nickname)
+        textAge = view.findViewById<TextView>(R.id.text_age)
+        textDepartment = view.findViewById<TextView>(R.id.text_department)
+        textHobby = view.findViewById<TextView>(R.id.text_hobby)
+        textPersonality = view.findViewById<TextView>(R.id.text_personality)
+        cardPartner = view.findViewById<CardView>(R.id.card_partner)
 
 
 
-        textPartnerNull.visibility = View.GONE
-        layoutProfile.visibility = View.GONE
-
-        var cardPartner = view.findViewById<CardView>(R.id.card_partner)
 
         btnDating.setOnClickListener {
             var intent = Intent(activity, DatingActivity::class.java)
@@ -73,16 +81,26 @@ class HomeFragment() : Fragment() {
             val intent = Intent(activity, OpenChatListActivity::class.java)
             startActivity(intent)
         }
+        // Inflate the layout for this fragment
+        return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        textPartnerNull!!.visibility = View.GONE
+        layoutProfile!!.visibility = View.GONE
+
         VolleyService.getJoinDating(UserInfo.NICKNAME, activity!!.applicationContext, { success ->
             if (success == null) {
                 //데이팅 기능이 꺼져있는 경우
-                textPartnerState.setText("만남 기능이 Off 상태입니다")
-                textPartnerNull.visibility = View.VISIBLE
+                textPartnerState!!.setText("만남 기능이 Off 상태입니다")
+                textPartnerNull!!.visibility = View.VISIBLE
             } else {
-                layoutProfile.visibility = View.VISIBLE
+                layoutProfile!!.visibility = View.VISIBLE
 
                 //if(success.getString("joined")=="false"){
-                textPartnerState.setText("랜덤 추천 상대")
+                textPartnerState!!.setText("랜덤 추천 상대")
                 VolleyService.datingUserReq(
                     UserInfo.NICKNAME,
                     UserInfo.GENDER,
@@ -92,15 +110,15 @@ class HomeFragment() : Fragment() {
                         var array = success
 
                         if (array!!.length() == 0) {
-                            layoutProfile.visibility = View.GONE
-                            textPartnerNull.visibility = View.VISIBLE
-                            textPartnerNull.setText("대화 할 수 있는 상대가 없습니다")
+                            layoutProfile!!.visibility = View.GONE
+                            textPartnerNull!!.visibility = View.VISIBLE
+                            textPartnerNull!!.setText("대화 할 수 있는 상대가 없습니다")
                         } else {
                             val random = Random()
                             var num = random.nextInt(array!!.length())
                             var json = array[num] as JSONObject
 
-                            textNickname.setText("${json.getString("user_nickname")}")
+                            textNickname!!.setText("${json.getString("user_nickname")}")
                             var nickname = json.getString("user_nickname")
                             //현재 연도 구하기
                             var calendar = GregorianCalendar(Locale.KOREA)
@@ -111,11 +129,11 @@ class HomeFragment() : Fragment() {
                             //이용자 나이 계산
                             var age = year - Integer.parseInt(birthday) + 1
 
-                            textAge.setText("${age}세")
+                            textAge!!.setText("${age}세")
 
-                            textDepartment.setText("${json.getString("dept_name")}")
-                            textHobby.setText("취미 : ${json.getString("user_hobby")}")
-                            textPersonality.setText("성격 : ${json.getString("user_personality")}")
+                            textDepartment!!.setText("${json.getString("dept_name")}")
+                            textHobby!!.setText("취미 : ${json.getString("user_hobby")}")
+                            textPersonality!!.setText("성격 : ${json.getString("user_personality")}")
 
                             VolleyService.getImageReq(
                                 json.getString("user_nickname"),
@@ -129,10 +147,10 @@ class HomeFragment() : Fragment() {
                                         imageBytes.size
                                     )
 
-                                    imgProfile.setImageBitmap(image)
+                                    imgProfile!!.setImageBitmap(image)
                                 })
 
-                            cardPartner.setOnClickListener {
+                            cardPartner!!.setOnClickListener {
                                 val builder =
                                     AlertDialog.Builder(activity)
                                 builder.setTitle("${nickname}님과의 대화")
@@ -188,48 +206,7 @@ class HomeFragment() : Fragment() {
                             }
                         }
                     })
-
-                //}
-                /*else{
-                    textPartnerState.setText("현재 대화중인 상대")
-                    layoutProfile.visibility=View.VISIBLE
-                    VolleyService.getMyPartner(UserInfo.NICKNAME,activity!!.applicationContext,{success ->
-                        var partner : JSONObject=success!!.getJSONArray("partner")[0] as JSONObject
-                        textNickname.setText("닉네임 : ${partner.getString("user_nickname")}")
-
-                        //현재 연도 구하기
-                        var calendar = GregorianCalendar(Locale.KOREA)
-                        var year = calendar.get(Calendar.YEAR)
-                        //이용자 생일 구하기
-                        var birthday = partner.getString("user_birthday")
-                        birthday = birthday.substring(0, 4)
-                        //이용자 나이 계산
-                        var age = year - Integer.parseInt(birthday) + 1
-                        textAge.setText("나이 : ${age.toString()}")
-
-                        textDepartment.setText("학과 : ${partner.getString("dept_name")}")
-                        textHobby.setText("취미 : ${partner.getString("user_hobby")}")
-                        textPersonality.setText("성격 : ${partner.getString("user_personality")}")
-
-                        cardPartner.setOnClickListener {
-                            var room:JSONObject=success.getJSONArray("room").get(0) as JSONObject
-                            VolleyService.getRoomInfoReq(room.getString("room_id"),activity!!.applicationContext,{success ->
-                                var data=success!!
-
-                                var intent=Intent(activity!!.applicationContext,ChatActivity::class.java)
-                                intent.putExtra("room_id",data.getString("room_Id"))
-                                intent.putExtra("title",data.getString("room_title"))
-                                intent.putExtra("category",data.getString("cate_name"))
-                                startActivity(intent)
-                            })
-                        }
-
-                    })
-                }*/
-
             }
         })
-        // Inflate the layout for this fragment
-        return view
     }
 }

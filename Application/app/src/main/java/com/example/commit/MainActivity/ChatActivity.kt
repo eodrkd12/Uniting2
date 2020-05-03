@@ -255,7 +255,9 @@ class ChatActivity : AppCompatActivity() {
                     val noon = current.format(DateTimeFormatter.ofPattern("a"))
                     var formatter: DateTimeFormatter? = null
 
-                    if (noon == "오후")
+                    Log.d("uniting",noon)
+
+                    if (noon == "PM")
                         formatter = DateTimeFormatter.ofPattern("오후 hh:mm")
                     else
                         formatter = DateTimeFormatter.ofPattern("오전 hh:mm")

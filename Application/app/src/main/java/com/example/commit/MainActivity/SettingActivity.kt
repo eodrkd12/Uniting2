@@ -33,20 +33,22 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_dating_on_off.*
 import kotlinx.android.synthetic.main.activity_join5.*
 import kotlinx.android.synthetic.main.activity_profile.*
+import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
+import kotlin.collections.HashMap
 
 class SettingActivity : AppCompatActivity() {
 
-    val PICK_FROM_CAMERA=0
-    val PICK_FROM_ALBUM=1
-    val CROP_FROM_CAMERA=2
-    val CROP_FROM_ALBUM=3
+    val PICK_FROM_CAMERA = 0
+    val PICK_FROM_ALBUM = 1
+    val CROP_FROM_CAMERA = 2
+    val CROP_FROM_ALBUM = 3
 
-    var imageCaptureUri: Uri?=null
+    var imageCaptureUri: Uri? = null
 
-    var dialog:Dialog? = null
+    var dialog: Dialog? = null
     var dialogView: View? = null
     var dialogEditChange: EditText? = null
     var dialogBtnCheck: Button? = null
@@ -55,35 +57,35 @@ class SettingActivity : AppCompatActivity() {
     var dialogBtnCancel: Button? = null
     var nicknameTemp: String = ""
     var nicknameCheck: Int = 0
-    var dialogimagechange_phone:Button?=null
-    var dialogimagechange_cam:Button?=null
+    var dialogimagechange_phone: Button? = null
+    var dialogimagechange_cam: Button? = null
 
-    var dialog_imageView:View?=null
+    var dialog_imageView: View? = null
 
     fun nicknameCheck() {
-        VolleyService.nicknameCheckReq(dialogEditChange!!.text.toString(), this, {success->
-            if(success==0)
-            {
+        VolleyService.nicknameCheckReq(dialogEditChange!!.text.toString(), this, { success ->
+            if (success == 0) {
                 dialogTextCheck!!.setText("중복된 닉네임입니다.")
                 dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
-            }
-            else if(success==1)
-            {
-                VolleyService.checkTmpNickname(dialogEditChange!!.text.toString(), this, {success->
-                    if(success==0)
-                    {
-                        dialogTextCheck!!.setText("중복된 닉네임입니다.")
-                        dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
-                    }
-                    else if(success==1)
-                    {
-                        dialogTextCheck!!.setText("사용가능한 닉네임입니다.")
-                        dialogTextCheck!!.setTextColor(Color.parseColor("#008000"))
-                        VolleyService.insertTmpNickname(dialogEditChange!!.text.toString(), this, {success->})
-                        nicknameTemp = dialogEditChange!!.text.toString()
-                        nicknameCheck = 1
-                    }
-                })
+            } else if (success == 1) {
+                VolleyService.checkTmpNickname(
+                    dialogEditChange!!.text.toString(),
+                    this,
+                    { success ->
+                        if (success == 0) {
+                            dialogTextCheck!!.setText("중복된 닉네임입니다.")
+                            dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
+                        } else if (success == 1) {
+                            dialogTextCheck!!.setText("사용가능한 닉네임입니다.")
+                            dialogTextCheck!!.setTextColor(Color.parseColor("#008000"))
+                            VolleyService.insertTmpNickname(
+                                dialogEditChange!!.text.toString(),
+                                this,
+                                { success -> })
+                            nicknameTemp = dialogEditChange!!.text.toString()
+                            nicknameCheck = 1
+                        }
+                    })
             }
         })
     }
@@ -91,27 +93,27 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var intent=intent
+        var intent = intent
 
-        var tag=intent.getStringExtra("tag")
+        var tag = intent.getStringExtra("tag")
 
         dialog = Dialog(this)
 
-        when(tag){
-            "프로필 보기" ->{
+        when (tag) {
+            "프로필 보기" -> {
                 setContentView(R.layout.activity_profile)
 
-                var background=this.getDrawable(R.drawable.image_profile)
-                img_profile.background=background
-                img_profile.clipToOutline=true
+                var background = this.getDrawable(R.drawable.image_profile)
+                img_profile.background = background
+                img_profile.clipToOutline = true
 
-                var gender=""
-                if(UserInfo.GENDER=="M"){
-                    gender="남자"
-                } else gender="여자"
+                var gender = ""
+                if (UserInfo.GENDER == "M") {
+                    gender = "남자"
+                } else gender = "여자"
                 //text_id.text=UserInfo.ID
-                text_nickname.text=UserInfo.NICKNAME
-                text_name.text=UserInfo.NAME
+                text_nickname.text = UserInfo.NICKNAME
+                text_name.text = UserInfo.NAME
 
                 //현재 연도 구하기
                 var calendar = GregorianCalendar(Locale.KOREA)
@@ -123,15 +125,15 @@ class SettingActivity : AppCompatActivity() {
                 var age = year - Integer.parseInt(birthday) + 1
                 text_age.setText("${age}세")
 
-                text_gender.text=gender
-                text_department.text="${UserInfo.UNIV} ${UserInfo.DEPT}"
+                text_gender.text = gender
+                text_department.text = "${UserInfo.UNIV} ${UserInfo.DEPT}"
 
-                text_department.text="계명대학교 컴퓨터공학전공"
-                text_hobby.text="취미 : ${UserInfo.HOBBY}"
-                text_personality.text="성격 : ${UserInfo.PERSONALITY}"
+                text_department.text = "계명대학교 컴퓨터공학전공"
+                text_hobby.text = "취미 : ${UserInfo.HOBBY}"
+                text_personality.text = "성격 : ${UserInfo.PERSONALITY}"
 
-                VolleyService.getImageReq(UserInfo.NICKNAME,this, { success ->
-                    Log.d("uniting",success!!.getString("user_image"))
+
+                VolleyService.getImageReq(UserInfo.NICKNAME, this, { success ->
                     val imageBytes = Base64.decode(success!!.getString("user_image"), 0)
                     val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
@@ -140,20 +142,23 @@ class SettingActivity : AppCompatActivity() {
 
                 text_imagechange.setOnClickListener({
                     dialog_imageView = layoutInflater.inflate(R.layout.dialog_imagechange, null)
-                    dialogBtnCancel = dialog_imageView!!.findViewById<Button>(R.id.btn_imagechangecancel)
-                    dialogimagechange_phone=dialog_imageView!!.findViewById<Button>(R.id.btn_changeimage_from_phone)
-                    dialogimagechange_cam=dialog_imageView!!.findViewById<Button>(R.id.btn_changeimage_from_cam)
+                    dialogBtnCancel =
+                        dialog_imageView!!.findViewById<Button>(R.id.btn_imagechangecancel)
+                    dialogimagechange_phone =
+                        dialog_imageView!!.findViewById<Button>(R.id.btn_changeimage_from_phone)
+                    dialogimagechange_cam =
+                        dialog_imageView!!.findViewById<Button>(R.id.btn_changeimage_from_cam)
 
                     dialogimagechange_phone!!.setOnClickListener({
                         //이미지변경버튼
-                        var albumIntent=Intent(Intent.ACTION_PICK)
+                        var albumIntent = Intent(Intent.ACTION_PICK)
                         albumIntent.setType(MediaStore.Images.Media.CONTENT_TYPE)
-                        startActivityForResult(albumIntent,PICK_FROM_ALBUM)
+                        startActivityForResult(albumIntent, PICK_FROM_ALBUM)
                         dialog!!.dismiss()
                     })
                     dialogimagechange_cam!!.setOnClickListener({
-                        var cameraIntent=Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        startActivityForResult(cameraIntent,PICK_FROM_CAMERA)
+                        var cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        startActivityForResult(cameraIntent, PICK_FROM_CAMERA)
                         dialog!!.dismiss()
                     })
                     dialogBtnCancel!!.setOnClickListener({
@@ -173,24 +178,16 @@ class SettingActivity : AppCompatActivity() {
                     dialogBtnCancel = dialogView!!.findViewById<Button>(R.id.btn_changecancel)
 
                     dialogBtnCheck!!.setOnClickListener {
-                        if(dialogEditChange!!.text.toString().length < 3)
-                        {
+                        if (dialogEditChange!!.text.toString().length < 3) {
                             dialogTextCheck!!.text = "닉네임은 3자리 이상이어야 합니다."
                             dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
-                        }
-                        else
-                        {
-                            if(nicknameTemp == "")
-                            {
+                        } else {
+                            if (nicknameTemp == "") {
                                 nicknameCheck()
-                            }
-                            else if(nicknameTemp != dialogEditChange!!.text.toString())
-                            {
-                                VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+                            } else if (nicknameTemp != dialogEditChange!!.text.toString()) {
+                                VolleyService.deleteTmpNickname(nicknameTemp, this, { success -> })
                                 nicknameCheck()
-                            }
-                            else if(nicknameTemp == dialogEditChange!!.text.toString())
-                            {
+                            } else if (nicknameTemp == dialogEditChange!!.text.toString()) {
                                 dialogTextCheck!!.setText("사용가능한 닉네임입니다.")
                                 dialogTextCheck!!.setTextColor(Color.parseColor("#008000"))
                                 nicknameCheck = 1
@@ -198,13 +195,20 @@ class SettingActivity : AppCompatActivity() {
                         }
                     }
 
-                    dialogBtnConfirm!!.setOnClickListener{
-                        if(nicknameCheck == 1)
-                        {
-                            VolleyService.insertNickname(UserInfo.ID, nicknameTemp, this, {success->})
-                            VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+                    dialogBtnConfirm!!.setOnClickListener {
+                        if (nicknameCheck == 1) {
+                            VolleyService.insertNickname(
+                                UserInfo.ID,
+                                nicknameTemp,
+                                this,
+                                { success -> })
+                            VolleyService.deleteTmpNickname(nicknameTemp, this, { success -> })
 
-                            var query=FirebaseDatabase.getInstance().reference.child("chat").orderByKey()
+                            var beforeNickname = UserInfo.NICKNAME
+                            var newNickname=nicknameTemp
+
+                            var ref = FirebaseDatabase.getInstance().reference.child("chat")
+                            var query = ref.orderByKey()
 
                             val childEventListener = object : ChildEventListener {
                                 override fun onCancelled(p0: DatabaseError) {
@@ -214,14 +218,20 @@ class SettingActivity : AppCompatActivity() {
                                 }
 
                                 override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                                    Log.d("uniting",p0.getValue() as String)
                                 }
 
                                 override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                                    var i = p0.children.iterator()
-
-                                    while (i.hasNext()) {
-                                        Log.d("uniting","${i.next().toString()}")
+                                    var i=p0.children.iterator()
+                                    while(i.hasNext()) {
+                                        var dataSnapshot=i.next()
+                                        var key=dataSnapshot.key
+                                        var value=dataSnapshot.value as HashMap<String,Any>
+                                        Log.d("uniting","${beforeNickname} // ${nicknameTemp}")
+                                        if(value["speaker"].toString()==beforeNickname){
+                                            var hashMap=HashMap<String,Any>()
+                                            hashMap.put("${value["room_id"]}/${key}/speaker",newNickname)
+                                            ref.updateChildren(hashMap)
+                                        }
                                     }
                                 }
 
@@ -231,29 +241,27 @@ class SettingActivity : AppCompatActivity() {
 
                             query!!.addChildEventListener(childEventListener)
 
-
-                            var pref=this.getSharedPreferences("UserInfo",Context.MODE_PRIVATE)
-                            var editor=pref.edit()
+                            var pref = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+                            var editor = pref.edit()
                             editor.remove("NICKNAME").commit()
-                            editor.putString("NICKNAME",nicknameTemp).apply()
-                            UserInfo.NICKNAME=nicknameTemp
+                            editor.putString("NICKNAME", nicknameTemp).apply()
+
+                            UserInfo.NICKNAME = nicknameTemp
+                            text_nickname.text = UserInfo.NICKNAME
 
                             Toast.makeText(this, "닉네임 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show()
                             nicknameCheck = 0
                             nicknameTemp = ""
                             dialog!!.dismiss()
-                        }
-                        else
-                        {
+                        } else {
                             dialogTextCheck!!.text = "닉네임을 확인해주세요."
                             dialogTextCheck!!.setTextColor(Color.parseColor("#FF0000"))
                         }
                     }
 
                     dialogBtnCancel!!.setOnClickListener {
-                        if(nicknameTemp != "")
-                        {
-                            VolleyService.deleteTmpNickname(nicknameTemp, this, {success->})
+                        if (nicknameTemp != "") {
+                            VolleyService.deleteTmpNickname(nicknameTemp, this, { success -> })
                         }
                         nicknameCheck = 0
                         nicknameTemp = ""
@@ -265,7 +273,12 @@ class SettingActivity : AppCompatActivity() {
 
                         }
 
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
                         }
 
                         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -278,61 +291,63 @@ class SettingActivity : AppCompatActivity() {
                     dialog!!.show()
                 }
             }
-            "알림 설정"->{
+            "알림 설정" -> {
                 setContentView(R.layout.activity_alam_setting)
             }
-            "문의하기"->{
+            "문의하기" -> {
                 setContentView(R.layout.activity_ask)
             }
-            "앱 버전"->{
+            "앱 버전" -> {
                 setContentView(R.layout.activity_app_version)
             }
-            "공지사항"->{
+            "공지사항" -> {
                 setContentView(R.layout.activity_notice)
             }
-            "커뮤니티 이용규칙"->{
+            "커뮤니티 이용규칙" -> {
                 setContentView(R.layout.activity_rule)
             }
-            "개인정보 처리방침"->{
+            "개인정보 처리방침" -> {
                 setContentView(R.layout.activity_rule2)
             }
-            "정보 수신 동의 "->{
+            "정보 수신 동의 " -> {
                 setContentView(R.layout.activity_agreement)
             }
-            "회원 탈퇴"->{
+            "회원 탈퇴" -> {
                 setContentView(R.layout.activity_withdrawal)
             }
-            "로그아웃"->{
+            "로그아웃" -> {
             }
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(data==null) {
+        if (data == null) {
             return
         }
 
-        Log.d("uniting","onActivityResult")
+        Log.d("uniting", "onActivityResult")
 
-        when(requestCode){
+        when (requestCode) {
             PICK_FROM_CAMERA -> {
-                Log.d("uniting","CAMERA")
+                Log.d("uniting", "CAMERA")
                 val imageBitmap = data!!.extras.get("data") as Bitmap
                 img_profile.setImageBitmap(imageBitmap)
-                var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
-                VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
+                var bitmap = ((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
+                VolleyService.updateImageReq(UserInfo.NICKNAME, bitmap, this)
 
             }
             PICK_FROM_ALBUM -> {
-                Log.d("uniting","ALBUM")
-                imageCaptureUri=data!!.data
+                Log.d("uniting", "ALBUM")
+                imageCaptureUri = data!!.data
 
                 try {
-                    val imageBitmap= MediaStore.Images.Media.getBitmap(this.contentResolver,imageCaptureUri)
+                    val imageBitmap =
+                        MediaStore.Images.Media.getBitmap(this.contentResolver, imageCaptureUri)
                     img_profile.setImageBitmap(imageBitmap)
-                    var bitmap=((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
-                    VolleyService.updateImageReq(UserInfo.NICKNAME,bitmap,this)
-                    
+                    var bitmap = ((img_profile.drawable as Drawable) as BitmapDrawable).bitmap
+                    VolleyService.updateImageReq(UserInfo.NICKNAME, bitmap, this)
+
                 } catch (e: FileNotFoundException) {
                     // TODO Auto-generated catch block
                     e.printStackTrace()
