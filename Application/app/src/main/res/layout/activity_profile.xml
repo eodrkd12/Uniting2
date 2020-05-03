@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_profile"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
@@ -53,7 +53,8 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/text_name"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
         <TextView
                 android:id="@+id/text_name"
@@ -93,33 +94,46 @@
                 android:id="@+id/text_department"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintBottom_toTopOf="@id/text_hobby"
-                app:layout_constraintStart_toStartOf="@+id/text_nickname"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@id/text_name" />
 
         <TextView
                 android:id="@+id/text_hobby"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintBottom_toTopOf="@id/text_personality"
-                app:layout_constraintStart_toStartOf="@+id/text_nickname"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/text_department" />
 
         <TextView
                 android:id="@+id/text_personality"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintStart_toStartOf="@+id/text_nickname"
-                app:layout_constraintTop_toBottomOf="@+id/text_hobby" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@+id/text_hobby"
+                app:layout_constraintVertical_bias="0.0" />
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/img_profile"
@@ -267,7 +281,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_changedept" />
 
         <TextView
-                android:id="@+id/text_changecharacter"
+                android:id="@+id/text_changepersonality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"

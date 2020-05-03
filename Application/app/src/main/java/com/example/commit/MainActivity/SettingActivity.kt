@@ -116,7 +116,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     fun changePersonality() {
-        val hobbyList = arrayListOf(Personality("운동하기"), Personality("게임하기"), Personality("카페가기"), Personality("노래부르기"), Personality("여행가기"), Personality("춤추기"), Personality("독서하기"), Personality("요리하기"))
         dialog = Dialog(this)
         dialogView = layoutInflater.inflate(R.layout.dialog_personality, null)
         dialogBtnPass = dialogView!!.findViewById<TextView>(R.id.text_personalitypass)
@@ -161,7 +160,6 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         var intent=intent
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
 
         var tag=intent.getStringExtra("tag")
 
@@ -380,12 +378,55 @@ class SettingActivity : AppCompatActivity() {
 
                     dialogBtnChangeDept!!.setOnClickListener{
                         VolleyService.changeDeptname(UserInfo.ID, dialogEditDept!!.text.toString(), this, {success->})
+                        var pref=this.getSharedPreferences("UserInfo",Context.MODE_PRIVATE)
+                        var editor=pref.edit()
+                        editor.remove("DEPT").commit()
+                        editor.putString("DEPT",dialogEditDept!!.text.toString()).apply()
                         dialog!!.dismiss()
                     }
 
                     dialog!!.getWindow().statusBarColor = Color.TRANSPARENT
                     dialog!!.getWindow().getAttributes().windowAnimations = R.style.AnimationPopupStyle
                     dialog!!.addContentView(dialogView, ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT))
+                    dialog!!.show()
+                }
+
+                text_changepersonality.setOnClickListener {
+                    personalityList = arrayListOf(
+                        Personality("소심함"),
+                        Personality("활발함"),
+                        Personality("사교성좋음"),
+                        Personality("배려심깊음"),
+                        Personality("차분함"),
+                        Personality("개성있는"),
+                        Personality("재미있는"),
+                        Personality("세심함")
+                    )
+
+                    changePersonality()
+
+                    dialogTextTitle!!.text = "성격변경"
+
+                    dialogBtnPass!!.setOnClickListener {
+                        personalityCheck()
+                        if(count<2)
+                        {
+                            Toast.makeText(this, "2개이상선택해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                        else
+                        {
+                            VolleyService.changePersonality(UserInfo.ID, personality!!, this, {success->
+                            })
+                            var pref=this.getSharedPreferences("UserInfo",Context.MODE_PRIVATE)
+                            var editor=pref.edit()
+                            editor.remove("PERSONALITY").commit()
+                            editor.putString("PERSONALITY", personality!!).apply()
+                            UserInfo.PERSONALITY=personality!!
+                            dialog!!.dismiss()
+                        }
+                    }
+
+                    dialog!!.setContentView(dialogView)
                     dialog!!.show()
                 }
 
@@ -414,8 +455,12 @@ class SettingActivity : AppCompatActivity() {
                         else
                         {
                             VolleyService.changeHobby(UserInfo.ID, personality!!, this, {success->
-                                UserInfo.HOBBY=personality!!
                             })
+                            var pref=this.getSharedPreferences("UserInfo",Context.MODE_PRIVATE)
+                            var editor=pref.edit()
+                            editor.remove("HOBBY").commit()
+                            editor.putString("HOBBY", personality!!).apply()
+                            UserInfo.HOBBY=personality!!
                             dialog!!.dismiss()
                         }
                     }
@@ -423,6 +468,7 @@ class SettingActivity : AppCompatActivity() {
                     dialog!!.setContentView(dialogView)
                     dialog!!.show()
                 }
+
 
             }
             "알림 설정"->{
