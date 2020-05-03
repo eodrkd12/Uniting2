@@ -63,7 +63,7 @@ class ChatActivity : AppCompatActivity() {
         title = intent.getStringExtra("title")
         maker = intent.getStringExtra("maker")
         chatAgree = intent.getStringExtra("chat_agree")
-        
+
     }
 
     override fun onResume() {
@@ -287,6 +287,9 @@ class ChatActivity : AppCompatActivity() {
 
 
                 })
+            }
+            android.R.id.home->{
+                finish()
             }
 
 
