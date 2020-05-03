@@ -9,15 +9,16 @@
 
     <EditText
             android:id="@+id/edit_chat"
-            android:layout_width="343dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_marginStart="5dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/light_gray_background"
             android:ems="10"
             android:inputType="textMultiLine|textNoSuggestions"
             android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_send"
+            app:layout_constraintEnd_toStartOf="@+id/guideline15"
             app:layout_constraintStart_toStartOf="parent" />
 
     <include
@@ -31,7 +32,7 @@
             android:id="@+id/btn_send"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="2dp"
             android:background="@drawable/button3"
             android:cropToPadding="false"
             android:paddingStart="13dp"
@@ -41,8 +42,7 @@
             android:shadowColor="#00000000"
             app:layout_constraintBottom_toBottomOf="@+id/edit_chat"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_chat"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/edit_chat"
             app:srcCompat="@drawable/send_icon" />
 
     <ListView
@@ -56,17 +56,19 @@
             app:layout_constraintBottom_toTopOf="@+id/edit_chat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+    </ListView>
 
     <TextView
             android:id="@+id/text_waiting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:text="채팅 수락 대기중입니다"
             android:textColor="#000000"
             android:textSize="30dp"
             android:visibility="gone"
-            android:layout_marginTop="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,6 +117,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="59dp" />
 
     <!--<androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_chat"
