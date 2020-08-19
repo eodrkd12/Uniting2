@@ -891,7 +891,7 @@ object VolleyService {
     }
 
     fun getImageReq(nickname: String, context: Context, success: (JSONObject?) -> Unit) {
-        var url = "http://52.78.27.41:1901/user/getImage"
+        var url = "${ip}/user/getImage"
 
         var json = JSONObject()
         json.put("nickname", nickname)
@@ -984,12 +984,13 @@ object VolleyService {
     }
 
     fun sendFCMReq(roomId: String, title: String, content: String, context: Context) {
+
         var url = "${ip}/join_room/fcm/send"
 
         var json = JSONObject()
         json.put("topic", roomId)
         json.put("content", content)
-        json.put("title", title)
+        json.put("title",title)
 
         var request = object : JsonObjectRequest(Method.POST,
             url,
@@ -1038,7 +1039,6 @@ object VolleyService {
                 success(it)
             },
             Response.ErrorListener {
-                Log.d("uniting","${it}")
                 if(it is com.android.volley.ParseError)
                     success(null)
             }) {
@@ -1060,7 +1060,7 @@ object VolleyService {
             url,
             jsonObject,
             Response.Listener {
-                Log.d("uniting", "VolleyService.getMyPartner it : ${it.toString()}")
+
                 success(it)
             },
             Response.ErrorListener {
@@ -1093,11 +1093,9 @@ object VolleyService {
             url,
             jsonObject,
             Response.Listener {
-                Log.d("uniting","${it}")
                 success(it.getString("result"))
             },
             Response.ErrorListener {
-                Log.d("uniting","${it}")
             }) {
         }
         Volley.newRequestQueue(context).add(request)
@@ -1124,7 +1122,7 @@ object VolleyService {
     }
 
     fun chatAgreeReq(roomId: String?, context: Context, success: (String) -> Unit) {
-        var url = "${roomId}/join_room/agree"
+        var url = "${ip}/join_room/agree"
 
         var jsonObject = JSONObject()
         jsonObject.put("room_id", roomId)
@@ -1141,5 +1139,251 @@ object VolleyService {
         }
         Volley.newRequestQueue(context).add(request)
     }
+
+    fun insertId(id:String, universityName:String, departmentName: String, context:Context, success: (JSONObject?) -> Unit) {
+        var url = "${ip}/user/insert/id"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("univ_name", universityName)
+        jsonObject.put("dept_name", departmentName)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun deleteId(id:String, context:Context, success: (JSONObject?) -> Unit) {
+        var url = "${ip}/user/delete/id"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertNickname(id:String, nickname:String, context:Context, success: (JSONObject?) -> Unit) {
+        var url = "${ip}/user/insert/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun checkTmpNickname(nickname: String, context:Context, success: (Int?)->Unit) {
+        var url = "${ip}/user/check/tmp/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(0)
+            },
+            Response.ErrorListener {
+                success(1)
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertTmpNickname(nickname: String, context:Context, success: (JSONObject?)->Unit) {
+        var url = "${ip}/user/insert/tmp/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun deleteTmpNickname(nickname:String, context:Context, success:(JSONObject?)->Unit) {
+        var url = "${ip}/user/delete/tmp/nickname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun updateImageReq(nickname:String, bitmap: Bitmap, context:Context) {
+        var url = "${ip}/user/update/image"
+
+        var stringImage = ImageManager.BitmapToString(bitmap)
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+        jsonObject.put("bitmap", stringImage)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun removeToken(nickname: String, context: Context) {
+        var url = "${ip}/user/remove/token"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun insertTokenReq(nickname: String?,token:String?, context: Context) {
+        var url = "${ip}/user/insert/token"
+
+        Log.d("uniting",token)
+
+        var jsonObject = JSONObject()
+        jsonObject.put("nickname", nickname)
+        jsonObject.put("token",token)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun changeDeptname(id: String, departmentName: String, context:Context, success:(JSONObject?)->Unit) {
+        var url = "${ip}/user/change/deptname"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("dept_name", departmentName)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun changeHobby(id:String, hobby:String, context:Context, success:(JSONObject?)->Unit) {
+        var url = "${ip}/user/change/hobby"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("hobby", hobby)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    fun changePersonality(id:String, personality:String, context:Context, success:(JSONObject?)->Unit) {
+        var url = "${ip}/user/change/personality"
+
+        var jsonObject = JSONObject()
+        jsonObject.put("id", id)
+        jsonObject.put("personality", personality)
+
+        var request = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            jsonObject,
+            Response.Listener {
+                success(it)
+            },
+            Response.ErrorListener {
+            }) {
+        }
+        Volley.newRequestQueue(context).add(request)
+    }
+
+
 }
 

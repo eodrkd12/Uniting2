@@ -2,6 +2,7 @@ package com.example.commit.MainActivity
 
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -275,6 +276,7 @@ class InformActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 dialogRatingBar.setRating(ratingBar.rating)
 
+                dialog.getWindow().statusBarColor = Color.TRANSPARENT
                 dialog.getWindow().getAttributes().windowAnimations = R.style.AnimationPopupStyle
                 dialog.addContentView(dialogView, ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT))
                 dialog.show()

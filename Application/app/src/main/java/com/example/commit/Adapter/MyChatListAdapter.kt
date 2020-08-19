@@ -73,8 +73,8 @@ class MyChatListAdapter(val context:Context) : RecyclerView.Adapter<MyChatListAd
         }
     }
 
-    fun addItem(roomId: String, cateName: String, maker:String,roomTitle:String,limitNum:Int,universityName:String,curNum:Int,introduce:String,lastChat:String,lastChatTime:String,chatAgree:String){
-        val item= MyChatRoomListItem(roomId, cateName, maker, roomTitle, limitNum, universityName, curNum, introduce, lastChat, lastChatTime,chatAgree)
+    fun addItem(roomId: String, cateName: String, maker:String,roomTitle:String,limitNum:Int,universityName:String,curNum:Int,introduce:String,lastChat:String,lastChatTime:String,chatAgree:String,partner:String?){
+        val item= MyChatRoomListItem(roomId, cateName, maker, roomTitle, limitNum, universityName, curNum, introduce, lastChat, lastChatTime,chatAgree,partner)
         myChatRoomList.add(item)
     }
 

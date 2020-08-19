@@ -8,8 +8,8 @@
 
     <TextView
             android:id="@+id/text_option1"
-            android:layout_width="381dp"
-            android:layout_height="36dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:text="프로필 보기"
             android:textColor="#131313"
             android:textSize="20dp"
@@ -20,7 +20,7 @@
 
     <TextView
             android:id="@+id/text_option7"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="커뮤니티 이용규칙"
@@ -33,12 +33,12 @@
 
     <TextView
             android:id="@+id/text_option5"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="앱 버전"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,12 +46,12 @@
 
     <TextView
             android:id="@+id/text_option6"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="공지사항"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,12 +59,12 @@
 
     <TextView
             android:id="@+id/text_option11"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="회원탈퇴"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,24 +72,24 @@
 
     <TextView
             android:id="@+id/text_option3"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="알림 설정"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_option2" />
 
     <TextView
             android:id="@+id/text_option9"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="정보 수신 동의"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -97,12 +97,12 @@
 
     <TextView
             android:id="@+id/text_option8"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="개인정보 처리방침"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -110,12 +110,12 @@
 
     <TextView
             android:id="@+id/text_option4"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="문의하기"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -126,20 +126,21 @@
             android:layout_width="44dp"
             android:layout_height="32dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toTopOf="@+id/text_option3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.568"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/text_option2"
             app:layout_constraintTop_toBottomOf="@+id/text_option1" />
 
     <TextView
             android:id="@+id/text_option10"
-            android:layout_width="381dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:text="로그아웃"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
@@ -147,13 +148,12 @@
 
     <TextView
             android:id="@+id/text_option2"
-            android:layout_width="304dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:text="데이팅"
-            android:textSize="20dp"
             android:textColor="#131313"
+            android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_option1" />
 

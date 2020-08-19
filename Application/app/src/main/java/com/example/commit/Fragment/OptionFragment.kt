@@ -3,6 +3,7 @@ package com.example.commit.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -122,13 +123,15 @@ class OptionFragment():Fragment() {
 
         }
         textOption10.setOnClickListener{
-            var pref=activity!!.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+            VolleyService.removeToken(UserInfo.NICKNAME,context!!)
+
+            var pref=context!!.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
             var editor=pref.edit()
 
             editor.clear()
             editor.commit()
 
-            var intent= Intent(activity, LoginActivity::class.java)
+            var intent= Intent(context, LoginActivity::class.java)
             startActivity(intent)
 
         }

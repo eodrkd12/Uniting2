@@ -29,6 +29,7 @@ import com.example.commit.Singleton.GoogleAuthService.getAccount
 import com.example.commit.Singleton.VolleyService
 import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.firebase.iid.FirebaseInstanceId
+import com.example.commit.R.layout.activity_login
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -43,11 +44,14 @@ class LoginActivity : AppCompatActivity() {
             var intent:Intent=Intent(this,AcFindActivity::class.java)
             startActivity(intent)
         }
+
+
         //인승추가(도움말 버튼 클릭 시, 엑티비티 변환)
         text_guide.setOnClickListener {
             var intent:Intent=Intent(this,OpenChatListActivity::class.java)
             startActivity(intent)
         }
+
 
         text_join.setOnClickListener {
             var intent:Intent=Intent(this,Signup1Activity::class.java)
@@ -59,6 +63,8 @@ class LoginActivity : AppCompatActivity() {
             //xml파일에서 선언한 뷰의 id를 입력해야 함(* xml파일마다 중복된 id가 있으니 안헷갈리게 주의)
             var id:String=edit_id.text.toString()
             var pw:String=edit_pw.text.toString()
+
+            var token=FirebaseInstanceId.getInstance().token
 
             VolleyService.loginReq(id,pw,this, {success ->
                 when(success.getInt("code")){
@@ -91,24 +97,9 @@ class LoginActivity : AppCompatActivity() {
                         UserInfo.IMG=user.getString("user_image")
                         UserInfo.HOBBY=user.getString("user_hobby")
                         UserInfo.PERSONALITY=user.getString("user_personality")
-                        //var token=FirebaseInstanceId.getInstance().token
-                        UserInfo.FCM_TOKEN=user.getString("token")
+                        UserInfo.FCM_TOKEN=token!!
 
-                        /*val accountName = getAccount(this)
-                        UserInfo.GOOGLE_ACCOUNT=accountName
-
-                        val scope = "audience:server:client_id:" +
-                                "348791094939-n14jfd8f4epba5ii0m5h39vjedf3647b.apps.googleusercontent.com"
-
-                        var idToken: String? = null
-                        try {
-                            idToken = GoogleAuthUtil.getToken(this, accountName, scope)
-                            UserInfo.GOOGLE_ID_TOKEN=idToken
-                        } catch (e: Exception) {
-                            Log.d("test", "Exception while getting idToken: $e")
-                        }*/
-
-
+                        VolleyService.insertTokenReq(UserInfo.NICKNAME,token,this)
 
                         var pref=this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
                         var editor=pref.edit()
@@ -124,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
                             .putString("DEPT",UserInfo.DEPT)
                             .putString("HOBBY",UserInfo.HOBBY)
                             .putString("PERSONALITY",UserInfo.PERSONALITY)
-                            .putString("ING",UserInfo.IMG)
+                            .putString("IMG",UserInfo.IMG)
                             .putString("FCM_TOKEN",UserInfo.FCM_TOKEN)
                             /*.putString("GOOGLE_ID_TOKEN",UserInfo.GOOGLE_ID_TOKEN)
                             .putString("GOOGLE_ACCOUNT",UserInfo.GOOGLE_ACCOUNT)*/
