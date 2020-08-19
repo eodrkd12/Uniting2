@@ -39,9 +39,9 @@ module.exports=function(){
         },
 
 
-        create_dating_room: function(room_id,room_title,cate_name,maker,universityName,callback){
+        create_dating_room: function(room_id,room_title,cate_name,maker,universityName,user,callback){
             pool.getConnection(function(err,con){
-                var sql=`insert into chat_room value('${room_id}','${cate_name}','${maker}','${room_title}',2,'${universityName}',2,'','false')`;
+                var sql=`insert into chat_room value('${room_id}','${cate_name}','${maker}','${room_title}',2,'${universityName}',2,'','false','${user}')`;
                 con.query(sql,function(err,result,field){
                     con.release()
                     if(err) callback(err)
@@ -51,7 +51,7 @@ module.exports=function(){
         },
 	    create_open_room: function(roomId,roomTitle,category,maker,universityName,introduce,maxNum,callback){
 		    pool.getConnection(function(err,con){
-			    var sql=`insert into chat_room value('${roomId}','${category}','${maker}','${roomTitle}',${maxNum},'${universityName}',1,'${introduce}','true')`
+			    var sql=`insert into chat_room value('${roomId}','${category}','${maker}','${roomTitle}',${maxNum},'${universityName}',1,'${introduce}','true',null)`
 			    con.query(sql,function(err,result,field){
 				    con.release()
 				    if(err) callback(err)
@@ -92,7 +92,7 @@ module.exports=function(){
             },
 	    get_chat_room: function(user_nickname,callback){
 		    pool.getConnection(function(err,con){
-			    var sql=`select chat_room.room_id, cate_name,maker,room_title,limit_num,univ_name,cur_num,introduce  from chat_room,join_room where chat_room.room_id=join_room.room_id and join_room.user_nickname='${user_nickname}'`
+			    var sql=`select chat_room.room_id, cate_name,maker,room_title,limit_num,univ_name,cur_num,introduce,chat_agree,partner  from chat_room,join_room where chat_room.room_id=join_room.room_id and join_room.user_nickname='${user_nickname}'`
 			    con.query(sql,function(err,result,field){
 				    con.release()
 				    if(err) callback(err)

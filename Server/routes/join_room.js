@@ -54,8 +54,16 @@ router.post('/',function(req,res,next){//채팅방 생성
 	var user=req.body.user
 	var universityName=req.body.univ_name
         var time=moment().format('YYYY-MM-DD_HH-mm-ss')
-        var room_id=`${universityName}-${maker}-${time}`
-	var room_title=`${maker}&${user}`
+
+	var code=""
+
+	for(var i=0;i<10;i++){
+	    	var num=Math.floor(Math.random()*10)
+	        code+=num
+	}
+
+        var room_id=`${time}-${code}`
+	var room_title=`데이팅`
 
 	db_user.get_token(user,function(err,result){
 		if(err) console.log(err)
@@ -72,7 +80,7 @@ router.post('/',function(req,res,next){//채팅방 생성
 	})
 
 
-    	db_join_room.create_dating_room(room_id,room_title,cate_name,maker,universityName,function(err,result){
+    	db_join_room.create_dating_room(room_id,room_title,cate_name,maker,universityName,user,function(err,result){
 	    if(err) console.log(err)
 	    else{
 		    db_join_room.insert_join_room(room_id,maker,time,'true',function(err,result){
@@ -107,7 +115,15 @@ router.post('/open_chat',function(req,res,next){
 	var maker=req.body.maker
 	var universityName=req.body.univ_name
 	var time=moment().format('YYYY-MM-DD_HH-mm-ss')
-	var roomId=`${universityName}-${maker}-${time}`
+
+	var code=""
+
+	for(var i=0;i<6;i++){
+        	var num=Math.floor(Math.random()*10)
+	        code+=num
+	}
+
+	var roomId=`${time}-${code}`
 	var roomTitle=req.body.room_title
 	var maxNum=req.body.max_num
 	var introduce=req.body.introduce
@@ -421,7 +437,10 @@ router.post('/fcm/send',function(req,res,next){
 	var content = req.body.content
 	var title=req.body.title
 
-
+	if(title=="CHAT_REQUEST")  title="대화 요청"
+        else if(title=="CHAT_AGREE") title="요청 수락"
+        else if(title=="CHAT_DISAGREE") title="요청 거부"
+        
 	var message={
 		notification : {
 			body : content,
@@ -430,6 +449,8 @@ router.post('/fcm/send',function(req,res,next){
 		topic : topic
 
 	}
+
+	console.log(title)
 
 	admin.messaging().send(message)
 		.then((response) => {

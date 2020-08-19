@@ -14,6 +14,14 @@ router.get('/', function(req, res, next) {
   })
 });
 
+router.get('/data', function(req, res) {
+  db_user.data(function(err, result) {
+    if(err) console.log(err)
+    else res.send(result)
+  })
+})
+
+
 router.post('/dating', function(req, res, next) {
   db_user.get_dating(req.body[0].nickname,req.body[0].gender,req.body[0].univ_name,function(err,result){
     if(err) console.log(err);
@@ -22,8 +30,10 @@ router.post('/dating', function(req, res, next) {
 });
 
 router.post('/dating/joined', function(req,res,next){
+
 	db_user.get_dating_joined(req.body.nickname,function(err,result){
-		if(err) console.log(err)
+		if(err)
+			console.log(err)
 		else {
 			res.send(result[0])
 		}
@@ -96,7 +106,7 @@ router.delete('/',function(req,res,next){ // 상원 회원정보 삭제 (최신�
 
 router.post('/getImage',function(req,res,next){
 	var nickname=req.body.nickname
-	console.log(nickname)
+	console.log("닉네임" + nickname)
 	db_user.get_image(nickname,function(err,result){
 		if(err) console.log(err)
 		else{
@@ -145,38 +155,65 @@ router.post('/insertPersonality', function(req, res, next) {
 	res.send("success")
 })
 
-router.post('/insert/temporary/id', function(req, res, next) {
+router.post('/insert/id', function(req, res, next) {
 	var id=req.body.id
 	var universityName=req.body.univ_name
 	var departmentName=req.body.dept_name
 
-	db_user.insert_temporary_id(id, universityName, departmentName)
+	db_user.insert_id(id, universityName, departmentName)
 
 	res.send("success")
 })
 
-router.post('/delete/temporary/id', function(req, res, next) {
+router.post('/delete/id', function(req, res, next) {
 	var id=req.body.id
 
-	db_user.delete_temporary_id(id)
+	db_user.delete_id(id)
 
 	res.send("success")
 })
 
-router.post('/insert/temporary/nickname', function(req, res, next) {
-	var id=req.body.id
-	var nickname=req.body.nickname
-
-	db_user.insert_temporary_nickname(id, nickname)
-
-	res.send("success")
-})
-
-router.post('/change/nickname', function(req, res, next) {
+router.post('/insert/nickname', function(req, res, next) {
 	var id=req.body.id
 	var nickname=req.body.nickname
 
-	db_user.change_nickname(id, nickname)
+	db_user.insert_nickname(id, nickname)
+
+	res.send("success")
+})
+
+router.post('/change/deptname', function(req, res, next) {
+	var id=req.body.id
+	var departmentName=req.body.dept_name
+
+	db_user.change_deptname(id, departmentName)
+//	db_user.change_nickname_in_dating_on(id,nickname)
+
+	res.send("success")
+})
+
+router.post('/change/hobby', function(req, res, next) {
+	var id=req.body.id
+	var hobby=req.body.hobby
+
+	db_user.change_hobby(id, hobby)
+
+	res.send("success")
+})
+
+router.post('/change/personlity', function(req, res, next) {
+	var id=req.body.id
+	var personality=req.body.personality
+
+	db_user.change_personality(id, personality)
+
+	res.send("success")
+})
+
+router.post('/insert/tmp/nickname', function(req, res, next) {
+	var nickname=req.body.nickname
+
+	db_user.insert_tmp_nickname(nickname)
 
 	res.send("success")
 })
@@ -191,6 +228,43 @@ router.post('/check/tmp/nickname', function(req, res, next) {
 	})
 })
 
+router.post('/delete/tmp/nickname', function(req,res,next){
+	var nickname=req.body.nickname
 
+	db_user.delete_tmp_nickname(nickname)
+
+	res.send("success")
+})
+
+router.post('/update/image',function(req,res,next){
+	var nickname=req.body.nickname
+	var bitmap=req.body.bitmap
+
+	db_user.update_image(nickname,bitmap)
+
+	var object=new Object()
+	object.result="success"
+	res.send(object)
+})
+
+router.post('/remove/token',function(req,res,next){
+	var nickname=req.body.nickname
+
+	db_user.remove_token(nickname)
+
+	var object=new Object()
+	object.result="success"
+	res.send(object)
+})
+
+router.post('/insert/token',function(req,res,next){
+	var nickname=req.body.nickname
+	var token=req.body.token
+	db_user.insert_token(nickname,token)
+
+	var object=new Object()
+	object.result="success"
+	res.send(object)
+})
 
 module.exports = router;

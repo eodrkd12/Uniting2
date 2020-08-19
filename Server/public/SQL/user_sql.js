@@ -2,6 +2,16 @@ var pool = require('../../config/db_config');
 
 module.exports = function () {
     return {
+    data: function(callback) {
+      pool.getConnection(function(err, con) {
+        var saql = `select user_id, user_password from user`
+        con.query(sql, function(err, result, fields) {
+          con.release()
+          if(err) callback(err)
+          else callback(null, result)
+        })
+      })
+    },
         get_user: function (callback) {
             pool.getConnection(function (err, con) {
                 var sql=`select * from user`;
@@ -120,7 +130,7 @@ module.exports = function () {
         },
 	get_image:function(nickname,callback){
 		pool.getConnection(function(err,con){
-			var sql=`select user_image from user where user_id='${nickname}'`
+			var sql=`select user_image from user where user_nickname='${nickname}'`
 			con.query(sql,function(err,result,fields){
 				con.release()
 				if(err) console.log(err)
@@ -128,6 +138,15 @@ module.exports = function () {
 			})
 		})
 	},
+	    update_image:function(nickname,bitmap){
+		    pool.getConnection(function(err,con){
+			    var sql="update user set user_image='"+bitmap+"' where user_nickname='"+nickname+"'"
+			    con.query(sql,function(err,result,fields){
+				    con.release()
+				    if(err) console.log(err)
+			    })
+		    })
+	    },
 	    get_token:function(nickname,callback){
 		    pool.getConnection(function(err,con){
 			    var sql=`select token from user where user_nickname='${nickname}'`
@@ -135,6 +154,24 @@ module.exports = function () {
 				    con.release()
 				    if(err) console.log(err)
 				    else callback(null,result)
+			    })
+		    })
+	    },
+	    remove_token:function(nickname){
+		    pool.getConnection(function(err,con){
+			    var sql="update user set token='' where user_nickname='"+nickname+"'"
+			    con.query(sql,function(err,result,fields){
+				    con.release()
+				    if(err) console.log(err)
+			    })
+		    })
+	    },
+	    insert_token:function(nickname,token){
+		    pool.getConnection(function(err,con){
+			    var sql="update user set token='"+token+"' where user_nickname='"+nickname+"'"
+			    con.query(sql,function(err,result,fields){
+				    con.release()
+				    if(err) console.log(err)
 			    })
 		    })
 	    },
@@ -148,7 +185,7 @@ module.exports = function () {
 			    })
 		    })
 	    },
-	    insert_temporary_id:function(id, universityName, departmentName){
+	    insert_id:function(id, universityName, departmentName){
 		    pool.getConnection(function(err,con){
 			    var sql=`insert into user(user_id, univ_name, dept_name) values('${id}', '${universityName}', '${departmentName}')`
 			    con.query(sql, function(err, result, fields){
@@ -158,7 +195,7 @@ module.exports = function () {
 			    })
 		    })
 	    },
-	    delete_temporary_id:function(id){
+	    delete_id:function(id){
 		    pool.getConnection(function(err, con){
 			    var sql=`DELETE FROM user where user_id = '${id}'`
 			    con.query(sql, function(err, result, fields){
@@ -168,7 +205,7 @@ module.exports = function () {
 			    })
 		    })
 	    },
-	    insert_temporary_nickname:function(id, nickname) {
+	    insert_nickname:function(id, nickname) {
 		    pool.getConnection(function(err,con){
 			    var sql=`update user set user_nickname='${nickname}' where user_id='${id}'`
 			    con.query(sql, function(err, result, fields){
@@ -178,16 +215,46 @@ module.exports = function () {
 			    })
 		    })
 	    },
-	    change_nickname:function(id, nickname) {
+	    change_deptname:function(id, departmentName) {
 		    pool.getConnection(function(err, con){
-			    var sql=`update user set_user_nickname='${nickname}' where user_id='${id}'`
+			    var sql=`update user set dept_name='${departmentName}' where user_id='${id}'`
 			    con.query(sql, function(err, result, fields) {
 				    con.release()
 				    if(err) console.log(err)
-				    else console.log("닉네임 변경완료")
+				    else console.log("학과변경완료")
 			    })
 		    })
 	    },
+	    change_hobby:function(id, hobby){
+		    pool.getConnection(function(err, con){
+			    var sql=`update user set user_hobby='${hobby}' where user_id='${id}'`
+			    con.query(sql, function(err, result, fields){
+				    con.release()
+				    if(err) console.log(err)
+				    else console.log("취미변경완료")
+			    })
+		    })
+	    },
+	    change_personality:function(id, personality){
+		    pool.getConnection(function(err, con){
+			    var sql=`update user set user_personality='${personality}' where user_id='${id}'`
+			    con.query(sql, function(err, result, fields){
+				    con.release()
+				    if(err) console.log(err)
+				    else console.log("성격변경완료")
+			    })
+		    })
+	    },
+	    change_nickname_in_dating_on:function(id, nickname) {
+                    pool.getConnection(function(err, con){
+                            var sql=`update dating_on set_user_nickname='${nickname}' where user_id='${id}'`
+                            con.query(sql, function(err, result, fields) {
+                                    con.release()
+                                    if(err) console.log(err)
+                                    else console.log("닉네임 변경완료")
+                            })
+                    })
+            },
 	    check_tmp_nickname:function(nickname, callback) {
 		    pool.getConnection(function(err, con){
 			    var sql=`select user_nickname from tmpdata where user_nickname='${nickname}'`
@@ -195,6 +262,26 @@ module.exports = function () {
 				    con.release()
 				    if(err) console.log(err)
 				    else callback(null, result)
+			    })
+		    })
+	    },
+	    insert_tmp_nickname:function(nickname) {
+		    pool.getConnection(function(err, con){
+			    var sql=`insert into tmpdata(user_nickname) values('${nickname}')`
+			    con.query(sql, function(err, result, fields) {
+				    con.release()
+				    if(err) console.log(err)
+				    else console.log("임시닉네임 삽입완료")
+			    })
+		    })
+	    },
+	    delete_tmp_nickname:function(nickname){
+		    pool.getConnection(function(err, con){
+			    var sql=`DELETE from tmpdata where user_nickname='${nickname}'`
+			    con.query(sql, function(err, result, fields) {
+				    con.release()
+				    if(err) console.log(err)
+				    else console.log("임시닉네임 삭제완료")
 			    })
 		    })
 	    },
