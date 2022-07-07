@@ -14,7 +14,7 @@
     "firebase-admin": "^8.10.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.27",
     "morgan": "~1.9.1",
     "mysql": "^2.17.1",
